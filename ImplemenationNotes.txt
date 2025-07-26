@@ -1,0 +1,10 @@
+0- Spring components understanding
+1- User Entity Architecture
+2- Security & Certificate
+3- Logging
+4- Image/Video storing & uploading -> stream
+5- Cleaning the code
+
+
+****************************
+Update password method
