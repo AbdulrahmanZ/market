@@ -21,7 +21,7 @@ public class AuthenticationService {
             throw new RuntimeException("User not authenticated");
         }
 
-        String phone = authentication.getName(); // Phone number is used as username
+        String phone = authentication.getName();// Phone number is used as username
         return userRepository.findByPhone(phone)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }

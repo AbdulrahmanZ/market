@@ -24,7 +24,7 @@ public class UserController {
     @Transactional
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
         if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - Non-admin user");
         User createdUser = userService.createUser(user);
         return ResponseEntity.ok(createdUser);
     }
@@ -44,7 +44,7 @@ public class UserController {
     @Transactional
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - Non-admin user");
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

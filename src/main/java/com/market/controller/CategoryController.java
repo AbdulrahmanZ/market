@@ -26,7 +26,7 @@ public class CategoryController {
     @Transactional
     public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {
         if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - Non-admin user");
         Category createdCategory = categoryService.createCategory(category);
         return ResponseEntity.ok(createdCategory);
     }
@@ -49,7 +49,7 @@ public class CategoryController {
     public ResponseEntity<Category> updateCategory(@PathVariable Long id,
                                                    @RequestBody Category request) {
         if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - Non-admin user");
 
         Category categoryDetails = new Category();
         categoryDetails.setName(request.getName());
@@ -62,7 +62,7 @@ public class CategoryController {
     @Transactional
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - Non-admin user");
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }

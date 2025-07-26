@@ -25,7 +25,7 @@ public class TownController {
     @Transactional
     public ResponseEntity<Town> createTown(@Valid @RequestBody Town town) {
         if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - Non-admin user");
         Town createdTown = townService.createTown(town);
         return ResponseEntity.ok(createdTown);
     }
@@ -48,7 +48,7 @@ public class TownController {
     public ResponseEntity<Town> updateTown(@PathVariable Long id,
                                            @Valid @RequestBody Town request) {
         if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - Non-admin user");
         Town townDetails = new Town();
         townDetails.setName(request.getName());
 
@@ -60,7 +60,7 @@ public class TownController {
     @Transactional
     public ResponseEntity<Void> deleteTown(@PathVariable Long id) {
         if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized");
+            throw new RuntimeException("Unauthorized - Non-admin user");
         townService.deleteTown(id);
         return ResponseEntity.noContent().build();
     }

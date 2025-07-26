@@ -1,4 +1,4 @@
-package com.market.serializer;
+package com.market.serializer.user;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

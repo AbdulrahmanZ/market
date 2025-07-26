@@ -2,11 +2,13 @@ package com.market.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.market.model.base.BaseEntity;
-import com.market.serializer.CategorySerializer;
-import com.market.serializer.ShopSerializer;
-import com.market.serializer.TownSerializer;
-import com.market.serializer.UserSerializer;
+import com.market.serializer.category.CategorySerializer;
+import com.market.serializer.shop.ShopSerializer;
+import com.market.serializer.town.TownSerializer;
+import com.market.serializer.user.UserSerializer;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "_shops")
@@ -44,6 +46,9 @@ public class Shop extends BaseEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     @JsonSerialize(using = UserSerializer.class)
     private User owner;
+
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Item> items;
 
     public Shop(String name,
                 String description,
@@ -148,5 +153,19 @@ public class Shop extends BaseEntity {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
+
+    public Integer getItemCount() {
+        if (items == null)
+            return 0;
+        return items.size();
     }
 }

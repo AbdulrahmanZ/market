@@ -2,8 +2,8 @@ package com.market.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.market.model.base.BaseEntity;
-import com.market.serializer.ItemSerializer;
-import com.market.serializer.ShopSerializer;
+import com.market.serializer.item.ItemSerializer;
+import com.market.serializer.shop.ShopSerializer;
 import jakarta.persistence.*;
 
 

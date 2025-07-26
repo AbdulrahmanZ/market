@@ -47,10 +47,12 @@ public class ShopController {
             @Valid @RequestPart("shop") ShopRequest shopRequest,
             @RequestPart(value = "profileImage", required = false) MultipartFile file) {
         try {
-            // Require authentication
-            authenticationService.requireAuthentication();
-            // Ensure user can only create shops for themselves
-            authenticationService.requireOwnership(shopRequest.getOwnerId());
+            if (!authenticationService.getCurrentUser().getAdmin()) {
+                // Require authentication
+                authenticationService.requireAuthentication();
+                // Ensure user can only create shops for themselves
+                authenticationService.requireOwnership(shopRequest.getOwnerId());
+            }
 
             Category category = new Category();
             category.setId(shopRequest.getCategoryId());
@@ -111,12 +113,13 @@ public class ShopController {
         logger.debug("Profile image: {}", file != null ? "present (" + file.getOriginalFilename() + ")" : "null");
 
         try {
-            // Require authentication
-            authenticationService.requireAuthentication();
-
-            // Check if user owns the shop
             Shop existingShop = shopService.getShopById(id);
-            authenticationService.requireOwnership(existingShop.getOwner().getId());
+            if (!authenticationService.getCurrentUser().getAdmin()) {
+                // Require authentication
+                authenticationService.requireAuthentication();
+                // Check if user owns the shop
+                authenticationService.requireOwnership(existingShop.getOwner().getId());
+            }
 
             if (shopRequest != null) {
 
@@ -169,12 +172,13 @@ public class ShopController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> deleteShop(@PathVariable Long id) {
-        // Require authentication
-        authenticationService.requireAuthentication();
-
-        // Check if user owns the shop
         Shop shop = shopService.getShopById(id);
-        authenticationService.requireOwnership(shop.getOwner().getId());
+        if (!authenticationService.getCurrentUser().getAdmin()) {
+            // Require authentication
+            authenticationService.requireAuthentication();
+            // Check if user owns the shop
+            authenticationService.requireOwnership(shop.getOwner().getId());
+        }
 
         shopService.deleteShop(id);
         return ResponseEntity.noContent().build();

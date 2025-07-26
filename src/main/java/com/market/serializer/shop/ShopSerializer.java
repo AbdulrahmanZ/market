@@ -1,4 +1,4 @@
-package com.market.serializer;
+package com.market.serializer.shop;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -18,7 +18,8 @@ public class ShopSerializer extends JsonSerializer<Shop> {
             // Always write basic fields
             gen.writeNumberField("id", shop.getId());
             gen.writeStringField("name", shop.getName());
-            
+            gen.writeStringField("itemCount", String.valueOf(shop.getItemCount()));
+
             if (shop.getDescription() != null) {
                 gen.writeStringField("description", shop.getDescription());
             }
