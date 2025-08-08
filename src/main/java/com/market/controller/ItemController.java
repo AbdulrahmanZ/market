@@ -59,6 +59,7 @@ public class ItemController {
 
             Item item = new Item();
             item.setDescription(itemRequest.getDescription());
+            item.setName(itemRequest.getName());
             item.setPrice(itemRequest.getPrice());
 
             // Set shop relationship
@@ -120,6 +121,7 @@ public class ItemController {
             if (itemRequest != null) {
                 // Update item details
                 existingItem.setDescription(StringUtils.isEmpty(itemRequest.getDescription()) ? existingItem.getDescription() : itemRequest.getDescription());
+                existingItem.setName(StringUtils.isEmpty(itemRequest.getName()) ? existingItem.getName() : itemRequest.getName());
                 existingItem.setPrice(itemRequest.getPrice() == null ? existingItem.getPrice() : itemRequest.getPrice());
 
                 // Note: We don't allow changing the shop ID for existing items for data integrity

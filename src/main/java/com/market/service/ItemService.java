@@ -103,6 +103,7 @@ public class ItemService {
         Item item = getItemById(id);
 
         item.setDescription(itemDetails.getDescription());
+        item.setName(itemDetails.getName());
         item.setPrice(itemDetails.getPrice());
         item.setMediaUrl(itemDetails.getMediaUrl());
         item.setMediaType(itemDetails.getMediaType());
@@ -195,5 +196,17 @@ public class ItemService {
 
     public boolean canAddMoreItems(Long shopId) {
         return getRemainingItemSlots(shopId) > 0;
+    }
+
+    public Page<Item> searchItemsAdvanced(
+            String name,
+            String description,
+            Double minPrice,
+            Double maxPrice,
+            Long categoryId,
+            Long townId,
+            Pageable pageable
+    ) {
+        return itemRepository.searchItemsAdvanced(name, description, minPrice, maxPrice, categoryId, townId, pageable);
     }
 }

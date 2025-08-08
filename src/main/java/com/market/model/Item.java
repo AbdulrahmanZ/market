@@ -18,6 +18,9 @@ public class Item extends BaseEntity {
     @Column(nullable = false)
     private Double price;
 
+    // Added name field for the item entity
+    private String name;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", nullable = false)
     @JsonSerialize(using = ShopSerializer.class)
@@ -46,6 +49,14 @@ public class Item extends BaseEntity {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Shop getShop() {

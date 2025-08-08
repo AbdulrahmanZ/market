@@ -3,10 +3,14 @@ package com.market.dto;
 import com.market.model.MediaType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.NotBlank;
 
 public class ItemRequest {
 
     private String description;
+
+    @NotBlank(message = "Name is required")
+    private String name;
 
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be positive")
@@ -26,6 +30,14 @@ public class ItemRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Double getPrice() {

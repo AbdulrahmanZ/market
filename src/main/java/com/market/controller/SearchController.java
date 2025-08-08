@@ -97,4 +97,18 @@ public class SearchController {
         Page<Item> items = itemService.getItemsByPriceRange(minPrice, maxPrice, pageable);
         return ResponseEntity.ok(items);
     }
+
+    @GetMapping("/items-advanced")
+    public ResponseEntity<Page<Item>> searchItemsAdvanced(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long townId,
+            Pageable pageable
+    ) {
+        Page<Item> items = itemService.searchItemsAdvanced(name, description, minPrice, maxPrice, categoryId, townId, pageable);
+        return ResponseEntity.ok(items);
+    }
 }

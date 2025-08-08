@@ -18,6 +18,9 @@ public class ItemSerializer extends JsonSerializer<Item> {
             // Always write basic fields
             gen.writeNumberField("id", item.getId());
             
+            if (item.getName() != null) {
+                gen.writeStringField("name", item.getName());
+            }
             if (item.getDescription() != null) {
                 gen.writeStringField("description", item.getDescription());
             }
