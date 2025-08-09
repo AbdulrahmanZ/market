@@ -3,7 +3,6 @@ package com.market.service;
 import com.market.model.User;
 import com.market.repository.UserRepository;
 import com.market.exception.UserAlreadyExistsException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,12 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
     }
 
     public User createUser(User user) {
@@ -41,12 +40,11 @@ public class UserService {
         return userRepository.findAll(pageable);
     }
 
-    public Page<User> searchUsers(String phone, String username, Pageable pageable) {
-        return userRepository.searchByPhoneAndUsername(phone, username, pageable);
-    }
-
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
+    public Page<User> searchUsers(String phone, String username, Pageable pageable) {
+        return userRepository.searchByPhoneAndUsername(phone, username, pageable);
+    }
 }

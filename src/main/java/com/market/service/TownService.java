@@ -2,7 +2,6 @@ package com.market.service;
 
 import com.market.model.Town;
 import com.market.repository.TownRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,9 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class TownService {
 
-    @Autowired
-    TownRepository townRepository;
+    private final TownRepository townRepository;
 
+    TownService(TownRepository townRepository) {
+        this.townRepository = townRepository;
+    }
 
     public Town createTown(Town town) {
         if (townRepository.existsByName(town.getName())) {

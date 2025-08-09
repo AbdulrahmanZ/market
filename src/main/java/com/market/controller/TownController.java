@@ -5,7 +5,8 @@ import com.market.service.AuthenticationService;
 import com.market.service.TownService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +16,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/towns")
 public class TownController {
 
-    @Autowired
-    TownService townService;
+    private static final Logger logger = LoggerFactory.getLogger(TownController.class);
+    private final TownService townService;
+    private final AuthenticationService authenticationService;
 
-    @Autowired
-    AuthenticationService authenticationService;
+    public TownController(TownService townService, AuthenticationService authenticationService) {
+        this.townService = townService;
+        this.authenticationService = authenticationService;
+    }
 
     @PostMapping
     @Transactional
     public ResponseEntity<Town> createTown(@Valid @RequestBody Town town) {
-        if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized - Non-admin user");
+        authenticationService.adminUserCheck();
         Town createdTown = townService.createTown(town);
         return ResponseEntity.ok(createdTown);
     }
@@ -47,8 +50,7 @@ public class TownController {
     @Transactional
     public ResponseEntity<Town> updateTown(@PathVariable Long id,
                                            @Valid @RequestBody Town request) {
-        if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized - Non-admin user");
+        authenticationService.adminUserCheck();
         Town townDetails = new Town();
         townDetails.setName(request.getName());
 
@@ -59,8 +61,7 @@ public class TownController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> deleteTown(@PathVariable Long id) {
-        if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized - Non-admin user");
+        authenticationService.adminUserCheck();
         townService.deleteTown(id);
         return ResponseEntity.noContent().build();
     }

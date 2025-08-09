@@ -13,7 +13,6 @@ public class AuthenticationService {
     @Autowired
     UserRepository userRepository;
 
-
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -45,6 +44,12 @@ public class AuthenticationService {
     public void requireOwnership(Long ownerId) {
         if (!isCurrentUser(ownerId)) {
             throw new RuntimeException("Access denied: You can only modify your own resources");
+        }
+    }
+
+    public void adminUserCheck() {
+        if (!getCurrentUser().getAdmin()) {
+            throw new RuntimeException("Unauthorized: Non-admin user");
         }
     }
 }

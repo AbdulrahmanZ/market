@@ -5,7 +5,8 @@ import com.market.service.AuthenticationService;
 import com.market.service.CategoryService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -15,18 +16,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    @Autowired
-    CategoryService categoryService;
+    private static final Logger logger = LoggerFactory.getLogger(CategoryController.class);
+    private final CategoryService categoryService;
+    private final AuthenticationService authenticationService;
 
-    @Autowired
-    AuthenticationService authenticationService;
-
+    public CategoryController(CategoryService categoryService, AuthenticationService authenticationService) {
+        this.categoryService = categoryService;
+        this.authenticationService = authenticationService;
+    }
 
     @PostMapping
     @Transactional
     public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {
-        if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized - Non-admin user");
+        authenticationService.adminUserCheck();
         Category createdCategory = categoryService.createCategory(category);
         return ResponseEntity.ok(createdCategory);
     }
@@ -48,8 +50,7 @@ public class CategoryController {
     @Transactional
     public ResponseEntity<Category> updateCategory(@PathVariable Long id,
                                                    @RequestBody Category request) {
-        if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized - Non-admin user");
+        authenticationService.adminUserCheck();
 
         Category categoryDetails = new Category();
         categoryDetails.setName(request.getName());
@@ -61,8 +62,7 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        if (!authenticationService.getCurrentUser().getAdmin())
-            throw new RuntimeException("Unauthorized - Non-admin user");
+        authenticationService.adminUserCheck();
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }

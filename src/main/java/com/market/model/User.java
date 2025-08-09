@@ -1,13 +1,10 @@
 package com.market.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.market.model.base.BaseEntity;
-import com.market.serializer.user.UserSerializer;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "_users")
-@JsonSerialize(using = UserSerializer.class)
 public class User extends BaseEntity {
 
     @Column(unique = true, nullable = false)
