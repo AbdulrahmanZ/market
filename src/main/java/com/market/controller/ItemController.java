@@ -118,16 +118,6 @@ public class ItemController {
             Item existingItem = itemService.getItemById(id);
             authenticationService.requireOwnership(existingItem.getShop().getOwner().getId());
 
-            if (itemRequest != null) {
-                // Update item details
-                existingItem.setDescription(StringUtils.isEmpty(itemRequest.getDescription()) ? existingItem.getDescription() : itemRequest.getDescription());
-                existingItem.setName(StringUtils.isEmpty(itemRequest.getName()) ? existingItem.getName() : itemRequest.getName());
-                existingItem.setPrice(itemRequest.getPrice() == null ? existingItem.getPrice() : itemRequest.getPrice());
-
-                // Note: We don't allow changing the shop ID for existing items for data integrity
-                // If shop change is needed, it should be a separate business operation
-            }
-
             // Handle media file update
             if (file != null && !file.isEmpty()) {
                 // Delete old media file if exists
@@ -159,7 +149,7 @@ public class ItemController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteItem(@PathVariable Long id) throws IOException {
         // Require authentication
         authenticationService.requireAuthentication();
 

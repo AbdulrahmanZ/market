@@ -122,13 +122,6 @@ public class ShopController {
             }
 
             if (shopRequest != null) {
-
-                existingShop.setName(StringUtils.isEmpty(shopRequest.getName()) ? existingShop.getName() : shopRequest.getName());
-                existingShop.setDescription(StringUtils.isEmpty(shopRequest.getDescription()) ? existingShop.getDescription() : shopRequest.getDescription());
-                existingShop.setAddress(StringUtils.isEmpty(shopRequest.getAddress()) ? existingShop.getAddress() : shopRequest.getAddress());
-                existingShop.setPhone(StringUtils.isEmpty(shopRequest.getPhone()) ? existingShop.getPhone() : shopRequest.getPhone());
-                existingShop.setItemLimit(shopRequest.getItemLimit() == null ? existingShop.getItemLimit() : shopRequest.getItemLimit());
-
                 // Set relationships using IDs
                 if (shopRequest.getCategoryId() != null) {
                     Category category = new Category();
@@ -171,7 +164,7 @@ public class ShopController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<Void> deleteShop(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteShop(@PathVariable Long id) throws IOException {
         Shop shop = shopService.getShopById(id);
         if (!authenticationService.getCurrentUser().getAdmin()) {
             // Require authentication
@@ -183,6 +176,13 @@ public class ShopController {
         shopService.deleteShop(id);
         return ResponseEntity.noContent().build();
     }
+
+
+
+
+
+
+
 
 
     /****************************************************************************/

@@ -8,6 +8,8 @@ import com.market.repository.ShopRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -122,7 +124,7 @@ public class ShopService {
         return shopRepository.save(shop);
     }
     
-    public void deleteShop(Long id) {
+    public void deleteShop(Long id) throws IOException {
         Shop shop = getShopById(id);
 
         // Delete profile image file if exists

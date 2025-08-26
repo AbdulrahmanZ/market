@@ -8,6 +8,8 @@ import com.market.exception.ItemLimitExceededException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -128,7 +130,7 @@ public class ItemService {
         return updatedItem;
     }
     
-    public void deleteItem(Long id) {
+    public void deleteItem(Long id) throws IOException {
         Item item = getItemById(id);
 
         // Delete media from file storage before deleting item
