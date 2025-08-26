@@ -22,6 +22,9 @@ public class User extends BaseEntity {
     @Column()
     private Boolean admin = false;
 
+    @Column()
+    private Boolean deleted = false;
+
     // Getters and Setters
     public String getUsername() {
         return username;
@@ -63,4 +66,11 @@ public class User extends BaseEntity {
         this.admin = admin;
     }
 
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 }

@@ -41,7 +41,7 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        userRepository.softDeleteById(id);
     }
 
     public Page<User> searchUsers(String phone, String username, Pageable pageable) {

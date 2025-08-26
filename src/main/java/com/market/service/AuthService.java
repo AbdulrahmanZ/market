@@ -60,15 +60,21 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getPhone(),
-                        request.getPassword()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getPhone(),
+                            request.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid phone number or password");
+        }
 
         User user = userRepository.findByPhone(request.getPhone())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.getDeleted())
+            throw new RuntimeException("This user has been deleted");
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getPhone());
         String jwtToken = jwtService.generateToken(userDetails);
