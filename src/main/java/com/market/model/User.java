@@ -1,5 +1,6 @@
 package com.market.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.market.model.base.BaseEntity;
 import jakarta.persistence.*;
 
@@ -38,6 +39,7 @@ public class User extends BaseEntity {
         return password;
     }
 
+    @JsonIgnore
     public void setPassword(String password) {
         this.password = password;
     }
