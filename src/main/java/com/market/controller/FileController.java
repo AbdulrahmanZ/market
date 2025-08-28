@@ -54,12 +54,12 @@ public class FileController {
         try {
             Shop shop = shopService.getShopById(shopId);
             
-            if (shop.getProfileImageUrl() == null || shop.getProfileImageUrl().isEmpty()) {
+            if (shop.getImageKey() == null || shop.getImageKey().isEmpty()) {
                 logger.debug("Shop {} has no profile image", shopId);
                 return ResponseEntity.notFound().build();
             }
             
-            return streamFile(shop.getProfileImageUrl(), request, "shop-profile-" + shopId);
+            return streamFile(shop.getImageKey(), request, "shop-profile-" + shopId);
             
         } catch (Exception e) {
             logger.error("Error streaming shop profile: shopId={}", shopId, e);

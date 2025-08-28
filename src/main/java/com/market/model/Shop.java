@@ -30,7 +30,7 @@ public class Shop extends BaseEntity {
     private Boolean isActive;
 
     // Shop profile image
-    private String profileImageUrl;
+    private String imageKey;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
@@ -55,7 +55,7 @@ public class Shop extends BaseEntity {
                 String address,
                 String phone,
                 Integer itemLimit,
-                String profileImageUrl,
+                String imageKey,
                 Category category,
                 Town town,
                 User owner) {
@@ -64,7 +64,7 @@ public class Shop extends BaseEntity {
         this.address = address;
         this.phone = phone;
         this.itemLimit = itemLimit;
-        this.profileImageUrl = profileImageUrl;
+        this.imageKey = imageKey;
         this.category = category;
         this.town = town;
         this.owner = owner;
@@ -115,12 +115,12 @@ public class Shop extends BaseEntity {
         this.itemLimit = itemLimit;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
+    public String getImageKey() {
+        return imageKey;
     }
 
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void setImageKey(String imageKey) {
+        this.imageKey = imageKey;
     }
 
     public Category getCategory() {

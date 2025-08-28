@@ -50,8 +50,8 @@ public class ItemSerializer extends JsonSerializer<Item> {
                     if (item.getShop().getPhone() != null) {
                         gen.writeStringField("phone", item.getShop().getPhone());
                     }
-                    if (item.getShop().getProfileImageUrl() != null) {
-                        gen.writeStringField("profileImageUrl", item.getShop().getProfileImageUrl());
+                    if (item.getShop().getImageKey() != null) {
+                        gen.writeStringField("imageKey", item.getShop().getImageKey());
                     }
                     
                     // Include shop's category and town if available

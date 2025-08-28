@@ -105,7 +105,7 @@ public class ShopService {
         shop.setAddress(shopDetails.getAddress());
         shop.setPhone(shopDetails.getPhone());
         shop.setItemLimit(shopDetails.getItemLimit());
-        shop.setProfileImageUrl(shopDetails.getProfileImageUrl());
+        shop.setImageKey(shopDetails.getImageKey());
         
         // Update category if provided
         if (shopDetails.getCategory() != null && shopDetails.getCategory().getId() != null) {
@@ -126,8 +126,8 @@ public class ShopService {
         Shop shop = getShopById(id);
 
         // Delete profile image file if exists
-        if (shop.getProfileImageUrl() != null && !shop.getProfileImageUrl().isEmpty()) {
-            fileStorageService.deleteFile(shop.getProfileImageUrl());
+        if (shop.getImageKey() != null && !shop.getImageKey().isEmpty()) {
+            fileStorageService.deleteFile(shop.getImageKey());
         }
 
         shopRepository.delete(shop);

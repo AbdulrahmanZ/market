@@ -32,8 +32,8 @@ public class ShopSerializer extends JsonSerializer<Shop> {
             if (shop.getItemLimit() != null) {
                 gen.writeNumberField("itemLimit", shop.getItemLimit());
             }
-            if (shop.getProfileImageUrl() != null) {
-                gen.writeStringField("profileImageUrl", shop.getProfileImageUrl());
+            if (shop.getImageKey() != null) {
+                gen.writeStringField("imageKey", shop.getImageKey());
             }
             
             // Handle lazy-loaded relationships

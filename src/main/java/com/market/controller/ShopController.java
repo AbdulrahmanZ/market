@@ -80,7 +80,7 @@ public class ShopController {
             // Store profile image
             if (file != null) {
                 String profileImagePath = fileStorageService.storeShopProfileImage(file, createdShop.getId());
-                createdShop.setProfileImageUrl(profileImagePath);
+                createdShop.setImageKey(profileImagePath);
                 createdShop = shopRepository.save(createdShop);
             }
 
@@ -145,8 +145,8 @@ public class ShopController {
 
             if (file != null) {
                 // Delete old profile image if exists
-                if (existingShop.getProfileImageUrl() != null && !existingShop.getProfileImageUrl().isEmpty()) {
-                    fileStorageService.deleteFile(existingShop.getProfileImageUrl());
+                if (existingShop.getImageKey() != null && !existingShop.getImageKey().isEmpty()) {
+                    fileStorageService.deleteFile(existingShop.getImageKey());
                 }
 
                 // Store new profile image
@@ -156,7 +156,7 @@ public class ShopController {
                 } catch (IOException e) {
                     throw new RuntimeException("Failed to upload profile image: " + e.getMessage());
                 }
-                existingShop.setProfileImageUrl(profileImagePath);
+                existingShop.setImageKey(profileImagePath);
 
             }
 
