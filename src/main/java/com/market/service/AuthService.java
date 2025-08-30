@@ -49,6 +49,7 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setPhone(request.getPhone());
         user.setAdmin(request.getAdmin());
+        user.setShopLimit(request.getShopLimit());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         User savedUser = userRepository.save(user);
@@ -56,7 +57,7 @@ public class AuthService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getPhone());
         String jwtToken = jwtService.generateToken(userDetails);
 
-        return new LoginResponse(jwtToken, savedUser.getId(), savedUser.getUsername(), savedUser.getPhone(), savedUser.getAdmin(), savedUser.getActive());
+        return new LoginResponse(jwtToken, savedUser.getId(), savedUser.getUsername(), savedUser.getPhone(), savedUser.getAdmin(), savedUser.getActive(), savedUser.getShopLimit());
     }
 
     public LoginResponse login(LoginRequest request) {
@@ -79,7 +80,7 @@ public class AuthService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getPhone());
         String jwtToken = jwtService.generateToken(userDetails);
 
-        return new LoginResponse(jwtToken, user.getId(), user.getUsername(), user.getPhone(), user.getAdmin(), user.getActive());
+        return new LoginResponse(jwtToken, user.getId(), user.getUsername(), user.getPhone(), user.getAdmin(), user.getActive(), user.getShopLimit());
     }
 
 }
