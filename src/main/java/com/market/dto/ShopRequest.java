@@ -17,11 +17,11 @@ public class ShopRequest {
     @Min(value = 1, message = "Item limit must be at least 1")
     private Integer itemLimit;
     
-    @NotBlank(message = "Category name is required")
-    private String categoryName;
+    @NotNull(message = "Category ID is required")
+    private Long categoryId;
     
-    @NotBlank(message = "Town name is required")
-    private String townName;
+    @NotNull(message = "Town ID is required")
+    private Long townId;
     
     @NotNull(message = "Owner ID is required")
     private Long ownerId;
@@ -67,20 +67,20 @@ public class ShopRequest {
         this.itemLimit = itemLimit;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public String getTownName() {
-        return townName;
+    public Long getTownId() {
+        return townId;
     }
 
-    public void setTownName(String townName) {
-        this.townName = townName;
+    public void setTownId(Long townId) {
+        this.townId = townId;
     }
 
     public Long getOwnerId() {

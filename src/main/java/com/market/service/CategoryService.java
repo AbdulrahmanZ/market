@@ -54,12 +54,4 @@ public class CategoryService {
     public Page<Category> getCategoryByContainingName(String name, Pageable pageable) {
         return categoryRepository.findByContainName(name, pageable);
     }
-    
-    public Category getCategoryByName(String name) {
-        Category category = categoryRepository.findByName(name);
-        if (category == null) {
-            throw new RuntimeException("Category not found with name: " + name);
-        }
-        return category;
-    }
 }
