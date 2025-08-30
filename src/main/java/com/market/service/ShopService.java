@@ -1,5 +1,6 @@
 package com.market.service;
 
+import com.market.exception.ShopLimitExceededException;
 import com.market.model.Shop;
 import com.market.model.Category;
 import com.market.model.Town;
@@ -8,11 +9,12 @@ import com.market.repository.ShopRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class ShopService {
-    
+
     private final ShopRepository shopRepository;
     private final CategoryService categoryService;
     private final TownService townService;
@@ -20,39 +22,41 @@ public class ShopService {
     private final FileStorageService fileStorageService;
 
     public ShopService(ShopRepository shopRepository, CategoryService categoryService,
-                      TownService townService, UserService userService, FileStorageService fileStorageService) {
+                       TownService townService, UserService userService, FileStorageService fileStorageService) {
         this.shopRepository = shopRepository;
         this.categoryService = categoryService;
         this.townService = townService;
         this.userService = userService;
         this.fileStorageService = fileStorageService;
     }
-    
+
     public Shop createShop(Shop shop) {
         // Validate that owner, category, and town exist
         if (shop.getOwner() != null && shop.getOwner().getId() != null) {
             User owner = userService.getUserById(shop.getOwner().getId());
             shop.setOwner(owner);
         }
-        
+
         if (shop.getCategory() != null && shop.getCategory().getId() != null) {
             Category category = categoryService.getCategoryById(shop.getCategory().getId());
             shop.setCategory(category);
         }
-        
+
         if (shop.getTown() != null && shop.getTown().getId() != null) {
             Town town = townService.getTownById(shop.getTown().getId());
             shop.setTown(town);
         }
-        
+        // Check shop limit constraint
+        checkShopLimit(shop.getOwner().getId());
+
         // Check if shop name already exists for this owner
         if (shopRepository.existsByNameAndOwnerId(shop.getName(), shop.getOwner().getId())) {
             throw new RuntimeException("Shop name already exists for this owner");
         }
-        
+
         return shopRepository.save(shop);
     }
-    
+
     public Shop getShopById(Long id) {
         return shopRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Shop not found"));
@@ -66,7 +70,7 @@ public class ShopService {
     public Page<Shop> getAllShops(Pageable pageable) {
         return shopRepository.findAll(pageable);
     }
-    
+
     public List<Shop> getShopsByOwner(Long ownerId) {
         return shopRepository.findByOwnerId(ownerId);
     }
@@ -90,38 +94,38 @@ public class ShopService {
     public Page<Shop> getShopsByCategory(Long categoryId, Pageable pageable) {
         return shopRepository.findByCategoryId(categoryId, pageable);
     }
-    
+
     public Shop updateShop(Long id, Shop shopDetails) {
         Shop shop = getShopById(id);
-        
+
         // Check if name is being changed and if new name already exists for this owner
-        if (!shop.getName().equals(shopDetails.getName()) && 
-            shopRepository.existsByNameAndOwnerId(shopDetails.getName(), shop.getOwner().getId())) {
+        if (!shop.getName().equals(shopDetails.getName()) &&
+                shopRepository.existsByNameAndOwnerId(shopDetails.getName(), shop.getOwner().getId())) {
             throw new RuntimeException("Shop name already exists for this owner");
         }
-        
+
         shop.setName(shopDetails.getName());
         shop.setDescription(shopDetails.getDescription());
         shop.setAddress(shopDetails.getAddress());
         shop.setPhone(shopDetails.getPhone());
         shop.setItemLimit(shopDetails.getItemLimit());
         shop.setImageKey(shopDetails.getImageKey());
-        
+
         // Update category if provided
         if (shopDetails.getCategory() != null && shopDetails.getCategory().getId() != null) {
             Category category = categoryService.getCategoryById(shopDetails.getCategory().getId());
             shop.setCategory(category);
         }
-        
+
         // Update town if provided
         if (shopDetails.getTown() != null && shopDetails.getTown().getId() != null) {
             Town town = townService.getTownById(shopDetails.getTown().getId());
             shop.setTown(town);
         }
-        
+
         return shopRepository.save(shop);
     }
-    
+
     public void deleteShop(Long id) {
         Shop shop = getShopById(id);
 
@@ -132,9 +136,34 @@ public class ShopService {
 
         shopRepository.delete(shop);
     }
-    
+
     public boolean isShopOwner(Long shopId, Long userId) {
         Shop shop = getShopById(shopId);
         return shop.getOwner().getId().equals(userId);
+    }
+
+    /**
+     * Check if user has reached their shop limit
+     *
+     * @param userId The user ID to check
+     * @throws ShopLimitExceededException if user has reached their shop limit
+     */
+    private void checkShopLimit(Long userId) {
+        User user = userService.getUserById(userId);
+        long currentShopCount = shopRepository.countByOwnerId(userId);
+
+        if (currentShopCount >= user.getShopLimit()) {
+            throw new ShopLimitExceededException(userId, user.getShopLimit(), currentShopCount);
+        }
+    }
+
+    /**
+     * Get the current shop count for a user
+     *
+     * @param userId The user ID
+     * @return The number of shops owned by the user
+     */
+    public long getShopCountByUser(Long userId) {
+        return shopRepository.countByOwnerId(userId);
     }
 }

@@ -86,7 +86,7 @@ public class ShopController {
 
             return ResponseEntity.ok(createdShop);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create shop with image: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -192,6 +192,12 @@ public class ShopController {
                                                @PathVariable Long userId) {
         boolean isOwner = shopService.isShopOwner(shopId, userId);
         return ResponseEntity.ok(isOwner);
+    }
+
+    @GetMapping("/user/{userId}/count")
+    public ResponseEntity<Long> getShopCountByUser(@PathVariable Long userId) {
+        long shopCount = shopService.getShopCountByUser(userId);
+        return ResponseEntity.ok(shopCount);
     }
 
 }

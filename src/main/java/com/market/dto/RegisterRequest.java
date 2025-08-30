@@ -17,6 +17,8 @@ public class RegisterRequest {
 
     private Boolean admin = false;
 
+    private Integer shopLimit = 1; // Default shop limit
+
     // Getters and Setters
     public String getUsername() {
         return username;
@@ -48,5 +50,13 @@ public class RegisterRequest {
 
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    public Integer getShopLimit() {
+        return shopLimit;
+    }
+
+    public void setShopLimit(Integer shopLimit) {
+        this.shopLimit = shopLimit;
     }
 }

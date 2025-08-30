@@ -8,8 +8,10 @@ public class LoginResponse {
     private String phone;
     private Boolean admin;
     private Boolean isActive;
+    private Integer shopLimit;
 
-    public LoginResponse() {}
+    public LoginResponse() {
+    }
 
     public LoginResponse(String token, String type, Long userId, String username, String phone) {
         this.token = token;
@@ -19,13 +21,14 @@ public class LoginResponse {
         this.phone = phone;
     }
 
-    public LoginResponse(String token, Long userId, String username, String phone, Boolean admin, Boolean isActive) {
+    public LoginResponse(String token, Long userId, String username, String phone, Boolean admin, Boolean isActive, Integer shopLimit) {
         this.token = token;
         this.userId = userId;
         this.username = username;
         this.phone = phone;
         this.admin = admin;
         this.isActive = isActive;
+        this.shopLimit = shopLimit;
     }
 
     // Getters and Setters
@@ -83,5 +86,13 @@ public class LoginResponse {
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public Integer getShopLimit() {
+        return shopLimit;
+    }
+
+    public void setShopLimit(Integer shopLimit) {
+        this.shopLimit = shopLimit;
     }
 }

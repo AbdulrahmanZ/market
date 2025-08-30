@@ -47,6 +47,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(ShopLimitExceededException.class)
+    public ResponseEntity<ErrorResponse> handleShopLimitExceeded(ShopLimitExceededException ex) {
+        ErrorResponse error = new ErrorResponse(
+                "SHOP_LIMIT_EXCEEDED",
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -62,19 +74,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, Object> response = new HashMap<>();
         Map<String, String> errors = new HashMap<>();
-        
+
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        
+
         response.put("error", "VALIDATION_FAILED");
         response.put("message", "Validation failed for one or more fields");
         response.put("status", HttpStatus.BAD_REQUEST.value());
         response.put("timestamp", LocalDateTime.now());
         response.put("validationErrors", errors);
-        
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
