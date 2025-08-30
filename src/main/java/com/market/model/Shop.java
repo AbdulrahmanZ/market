@@ -27,7 +27,7 @@ public class Shop extends BaseEntity {
     private Integer itemLimit;
 
     @Column(columnDefinition = "boolean default true")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     // Shop profile image
     private String imageKey;

@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -43,6 +44,59 @@ public class FileController {
     
     public FileController(FileStorageService fileStorageService) {
         this.fileStorageService = fileStorageService;
+    }
+    
+    // ==================== UPLOAD ENDPOINTS ====================
+    
+    @PostMapping("/upload/shop-profile")
+    public ResponseEntity<Map<String, String>> uploadShopProfileImage(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("shopId") Long shopId) {
+        
+        logger.info("Uploading shop profile image for shop ID: {}", shopId);
+        
+        try {
+            String imageKey = fileStorageService.storeShopProfileImage(file, shopId);
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("imageKey", imageKey);
+            response.put("message", "Shop profile image uploaded successfully");
+            
+            logger.info("Successfully uploaded shop profile image: {}", imageKey);
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Failed to upload shop profile image for shop ID: {}", shopId, e);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to upload image: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+    
+    @PostMapping("/upload/item-media")
+    public ResponseEntity<Map<String, String>> uploadItemMedia(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("shopId") Long shopId,
+            @RequestParam("itemId") Long itemId) {
+        
+        logger.info("Uploading item media for shop ID: {}, item ID: {}", shopId, itemId);
+        
+        try {
+            String mediaKey = fileStorageService.storeItemMedia(file, shopId, itemId);
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("mediaKey", mediaKey);
+            response.put("message", "Item media uploaded successfully");
+            
+            logger.info("Successfully uploaded item media: {}", mediaKey);
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Failed to upload item media for shop ID: {}, item ID: {}", shopId, itemId, e);
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to upload media: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
     
     // ==================== STREAMING ENDPOINTS ====================

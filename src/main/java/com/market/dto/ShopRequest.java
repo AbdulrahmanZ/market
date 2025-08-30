@@ -26,6 +26,9 @@ public class ShopRequest {
     @NotNull(message = "Owner ID is required")
     private Long ownerId;
 
+    private String imageKey;
+    private Boolean isActive;
+
     // Getters and Setters
     public String getName() {
         return name;
@@ -89,6 +92,22 @@ public class ShopRequest {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
+    }
+    
+    public String getImageKey() {
+        return imageKey;
+    }
+
+    public void setImageKey(String imageKey) {
+        this.imageKey = imageKey;
+    }
+    
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
 }

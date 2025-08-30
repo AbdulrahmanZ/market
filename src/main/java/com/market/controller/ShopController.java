@@ -19,9 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/shops")
@@ -43,9 +40,7 @@ public class ShopController {
 
     @PostMapping()
     @Transactional
-    public ResponseEntity<Shop> createShop(
-            @Valid @RequestPart("shop") ShopRequest shopRequest,
-            @RequestPart(value = "profileImage", required = false) MultipartFile file) {
+    public ResponseEntity<Shop> createShop(@Valid @RequestBody ShopRequest shopRequest) {
         try {
             if (!authenticationService.getCurrentUser().getAdmin()) {
                 // Require authentication
@@ -53,41 +48,42 @@ public class ShopController {
                 // Ensure user can only create shops for themselves
                 authenticationService.requireOwnership(shopRequest.getOwnerId());
             }
-
-            Category category = new Category();
-            category.setId(shopRequest.getCategoryId());
-
-            Town town = new Town();
-            town.setId(shopRequest.getTownId());
-
-            User owner = new User();
-            owner.setId(shopRequest.getOwnerId());
-
-            Shop shop = new Shop(
-                    shopRequest.getName(),
-                    shopRequest.getDescription(),
-                    shopRequest.getAddress(),
-                    shopRequest.getPhone(),
-                    shopRequest.getItemLimit(),
-                    null,
-                    category,
-                    town,
-                    owner);
-
-            // Create shop first to get ID
-            Shop createdShop = shopService.createShop(shop);
-
-            // Store profile image
-            if (file != null) {
-                String profileImagePath = fileStorageService.storeShopProfileImage(file, createdShop.getId());
-                createdShop.setImageKey(profileImagePath);
-                createdShop = shopRepository.save(createdShop);
-            }
-
+            Shop createdShop = shopService.createShop(createShopFromRequest(shopRequest));
             return ResponseEntity.ok(createdShop);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    private static Shop createShopFromRequest(ShopRequest shopRequest) {
+        Category category = new Category();
+        category.setId(shopRequest.getCategoryId());
+
+        Town town = new Town();
+        town.setId(shopRequest.getTownId());
+
+        User owner = new User();
+        owner.setId(shopRequest.getOwnerId());
+
+        Shop shop = new Shop(
+                shopRequest.getName(),
+                shopRequest.getDescription(),
+                shopRequest.getAddress(),
+                shopRequest.getPhone(),
+                shopRequest.getItemLimit(),
+                shopRequest.getImageKey(), // Use imageKey from request
+                category,
+                town,
+                owner);
+
+        // Set isActive if provided, otherwise default to true
+        if (shopRequest.getIsActive() != null) {
+            shop.setActive(shopRequest.getIsActive());
+        } else {
+            shop.setActive(true); // Default to active
+        }
+
+        return shop;
     }
 
     @GetMapping("/{id}")
@@ -105,12 +101,10 @@ public class ShopController {
     @Transactional
     public ResponseEntity<Shop> updateShop(
             @PathVariable Long id,
-            @Valid @RequestPart(value = "shop") ShopRequest shopRequest,
-            @RequestPart(value = "profileImage", required = false) MultipartFile file) {
+            @Valid @RequestBody ShopRequest shopRequest) {
 
         logger.info("Updating shop with ID: {}", id);
         logger.debug("Shop request: {}", shopRequest != null ? "present" : "null");
-        logger.debug("Profile image: {}", file != null ? "present (" + file.getOriginalFilename() + ")" : "null");
 
         try {
             Shop existingShop = shopService.getShopById(id);
@@ -120,16 +114,25 @@ public class ShopController {
                 // Check if user owns the shop
                 authenticationService.requireOwnership(existingShop.getOwner().getId());
             }
-
             if (shopRequest != null) {
+                // Update fields only if provided (preserve existing values)
+                if (shopRequest.getName() != null) {
+                    existingShop.setName(shopRequest.getName());
+                }
+                if (shopRequest.getDescription() != null) {
+                    existingShop.setDescription(shopRequest.getDescription());
+                }
+                if (shopRequest.getAddress() != null) {
+                    existingShop.setAddress(shopRequest.getAddress());
+                }
+                if (shopRequest.getPhone() != null) {
+                    existingShop.setPhone(shopRequest.getPhone());
+                }
+                if (shopRequest.getItemLimit() != null) {
+                    existingShop.setItemLimit(shopRequest.getItemLimit());
+                }
 
-                existingShop.setName(StringUtils.isEmpty(shopRequest.getName()) ? existingShop.getName() : shopRequest.getName());
-                existingShop.setDescription(StringUtils.isEmpty(shopRequest.getDescription()) ? existingShop.getDescription() : shopRequest.getDescription());
-                existingShop.setAddress(StringUtils.isEmpty(shopRequest.getAddress()) ? existingShop.getAddress() : shopRequest.getAddress());
-                existingShop.setPhone(StringUtils.isEmpty(shopRequest.getPhone()) ? existingShop.getPhone() : shopRequest.getPhone());
-                existingShop.setItemLimit(shopRequest.getItemLimit() == null ? existingShop.getItemLimit() : shopRequest.getItemLimit());
-
-                // Set relationships using IDs
+                // Update relationships only if provided
                 if (shopRequest.getCategoryId() != null) {
                     Category category = new Category();
                     category.setId(shopRequest.getCategoryId());
@@ -141,23 +144,20 @@ public class ShopController {
                     town.setId(shopRequest.getTownId());
                     existingShop.setTown(town);
                 }
-            }
 
-            if (file != null) {
-                // Delete old profile image if exists
-                if (existingShop.getImageKey() != null && !existingShop.getImageKey().isEmpty()) {
-                    fileStorageService.deleteFile(existingShop.getImageKey());
+                // Handle isActive field
+                if (shopRequest.getIsActive() != null) {
+                    existingShop.setActive(shopRequest.getIsActive());
                 }
 
-                // Store new profile image
-                String profileImagePath = null;
-                try {
-                    profileImagePath = fileStorageService.storeShopProfileImage(file, existingShop.getId());
-                } catch (IOException e) {
-                    throw new RuntimeException("Failed to upload profile image: " + e.getMessage());
+                // Handle image key update with cleanup
+                if (shopRequest.getImageKey() != null && !shopRequest.getImageKey().equals(existingShop.getImageKey())) {
+                    // Delete old profile image if exists and different from new one
+                    if (existingShop.getImageKey() != null && !existingShop.getImageKey().isEmpty()) {
+                        fileStorageService.deleteFile(existingShop.getImageKey());
+                    }
+                    existingShop.setImageKey(shopRequest.getImageKey());
                 }
-                existingShop.setImageKey(profileImagePath);
-
             }
 
             Shop updatedShop = shopService.updateShop(id, existingShop);
