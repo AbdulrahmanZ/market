@@ -47,4 +47,10 @@ public class UserService {
     public Page<User> searchUsers(String phone, String username, Pageable pageable) {
         return userRepository.searchByPhoneAndUsername(phone, username, pageable);
     }
+
+    public User updateShopLimit(Long userId, Integer newShopLimit) {
+        User user = getUserById(userId);
+        user.setShopLimit(newShopLimit);
+        return userRepository.save(user);
+    }
 }

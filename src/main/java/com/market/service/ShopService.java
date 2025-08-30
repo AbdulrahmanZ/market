@@ -5,6 +5,7 @@ import com.market.model.Category;
 import com.market.model.Town;
 import com.market.model.User;
 import com.market.repository.ShopRepository;
+import com.market.exception.ShopLimitExceededException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,9 @@ public class ShopService {
             Town town = townService.getTownById(shop.getTown().getId());
             shop.setTown(town);
         }
+        
+        // Check shop limit constraint
+        checkShopLimit(shop.getOwner().getId());
         
         // Check if shop name already exists for this owner
         if (shopRepository.existsByNameAndOwnerId(shop.getName(), shop.getOwner().getId())) {
@@ -136,5 +140,28 @@ public class ShopService {
     public boolean isShopOwner(Long shopId, Long userId) {
         Shop shop = getShopById(shopId);
         return shop.getOwner().getId().equals(userId);
+    }
+
+    /**
+     * Check if user has reached their shop limit
+     * @param userId The user ID to check
+     * @throws ShopLimitExceededException if user has reached their shop limit
+     */
+    private void checkShopLimit(Long userId) {
+        User user = userService.getUserById(userId);
+        long currentShopCount = shopRepository.countByOwnerId(userId);
+        
+        if (currentShopCount >= user.getShopLimit()) {
+            throw new ShopLimitExceededException(userId, user.getShopLimit(), currentShopCount);
+        }
+    }
+
+    /**
+     * Get the current shop count for a user
+     * @param userId The user ID
+     * @return The number of shops owned by the user
+     */
+    public long getShopCountByUser(Long userId) {
+        return shopRepository.countByOwnerId(userId);
     }
 }

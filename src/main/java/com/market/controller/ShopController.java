@@ -197,4 +197,10 @@ public class ShopController {
         return ResponseEntity.ok(isOwner);
     }
 
+    @GetMapping("/user/{userId}/count")
+    public ResponseEntity<Long> getShopCountByUser(@PathVariable Long userId) {
+        long shopCount = shopService.getShopCountByUser(userId);
+        return ResponseEntity.ok(shopCount);
+    }
+
 }

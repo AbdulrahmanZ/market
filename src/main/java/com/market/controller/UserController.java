@@ -55,4 +55,12 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}/shop-limit")
+    @Transactional
+    public ResponseEntity<User> updateShopLimit(@PathVariable Long id, @RequestParam Integer shopLimit) {
+        authenticationService.adminUserCheck();
+        User updatedUser = userService.updateShopLimit(id, shopLimit);
+        return ResponseEntity.ok(updatedUser);
+    }
+
 }

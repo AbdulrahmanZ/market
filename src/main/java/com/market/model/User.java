@@ -26,6 +26,9 @@ public class User extends BaseEntity {
     @Column()
     private Boolean deleted = false;
 
+    @Column(nullable = false)
+    private Integer shopLimit = 1; // Default shop limit for new users
+
     // Getters and Setters
     public String getUsername() {
         return username;
@@ -35,11 +38,11 @@ public class User extends BaseEntity {
         this.username = username;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
-    @JsonIgnore
     public void setPassword(String password) {
         this.password = password;
     }
@@ -74,5 +77,13 @@ public class User extends BaseEntity {
 
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getShopLimit() {
+        return shopLimit;
+    }
+
+    public void setShopLimit(Integer shopLimit) {
+        this.shopLimit = shopLimit;
     }
 }
