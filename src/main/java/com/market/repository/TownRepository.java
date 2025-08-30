@@ -14,4 +14,6 @@ public interface TownRepository extends JpaRepository<Town, Long> {
     Page<Town> findByContainName(String name, Pageable pageable);
 
     boolean existsByName(String name);
+    
+    Town findByName(String name);
 }

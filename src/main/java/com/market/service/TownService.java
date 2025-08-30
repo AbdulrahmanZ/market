@@ -52,4 +52,12 @@ public class TownService {
     public Page<Town> getTownByContainingName(String name, Pageable pageable) {
         return townRepository.findByContainName(name, pageable);
     }
+    
+    public Town getTownByName(String name) {
+        Town town = townRepository.findByName(name);
+        if (town == null) {
+            throw new RuntimeException("Town not found with name: " + name);
+        }
+        return town;
+    }
 }

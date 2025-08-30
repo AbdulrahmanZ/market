@@ -9,6 +9,8 @@ import com.market.repository.ShopRepository;
 import com.market.service.ShopService;
 import com.market.service.FileStorageService;
 import com.market.service.AuthenticationService;
+import com.market.service.CategoryService;
+import com.market.service.TownService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -41,6 +43,12 @@ public class ShopController {
     @Autowired
     ShopRepository shopRepository;
 
+    @Autowired
+    CategoryService categoryService;
+
+    @Autowired
+    TownService townService;
+
     @PostMapping()
     @Transactional
     public ResponseEntity<Shop> createShop(
@@ -54,11 +62,8 @@ public class ShopController {
                 authenticationService.requireOwnership(shopRequest.getOwnerId());
             }
 
-            Category category = new Category();
-            category.setId(shopRequest.getCategoryId());
-
-            Town town = new Town();
-            town.setId(shopRequest.getTownId());
+            Category category = categoryService.getCategoryByName(shopRequest.getCategoryName());
+            Town town = townService.getTownByName(shopRequest.getTownName());
 
             User owner = new User();
             owner.setId(shopRequest.getOwnerId());
@@ -129,16 +134,14 @@ public class ShopController {
                 existingShop.setPhone(StringUtils.isEmpty(shopRequest.getPhone()) ? existingShop.getPhone() : shopRequest.getPhone());
                 existingShop.setItemLimit(shopRequest.getItemLimit() == null ? existingShop.getItemLimit() : shopRequest.getItemLimit());
 
-                // Set relationships using IDs
-                if (shopRequest.getCategoryId() != null) {
-                    Category category = new Category();
-                    category.setId(shopRequest.getCategoryId());
+                // Set relationships using names
+                if (shopRequest.getCategoryName() != null && !shopRequest.getCategoryName().isEmpty()) {
+                    Category category = categoryService.getCategoryByName(shopRequest.getCategoryName());
                     existingShop.setCategory(category);
                 }
 
-                if (shopRequest.getTownId() != null) {
-                    Town town = new Town();
-                    town.setId(shopRequest.getTownId());
+                if (shopRequest.getTownName() != null && !shopRequest.getTownName().isEmpty()) {
+                    Town town = townService.getTownByName(shopRequest.getTownName());
                     existingShop.setTown(town);
                 }
             }
