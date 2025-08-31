@@ -16,6 +16,10 @@ public interface TownRepository extends JpaRepository<Town, Long> {
 
     boolean existsByName(String name);
 
+    boolean existsByCode(String code);
+
+    Town findByCode(String code);
+
     @Modifying
     @Query("update Town t SET t.deleted = true WHERE t.id = :id")
     void softDeleteById(Long id);

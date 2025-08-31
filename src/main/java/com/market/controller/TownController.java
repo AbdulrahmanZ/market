@@ -39,6 +39,15 @@ public class TownController {
         return ResponseEntity.ok(town);
     }
 
+    @GetMapping("/code/{code}")
+    public ResponseEntity<Town> getTownByCode(@PathVariable String code) {
+        Town town = townService.getTownByCode(code);
+        if (town == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(town);
+    }
+
     @GetMapping
     public ResponseEntity<Page<Town>> getAllTowns(Pageable pageable) {
         Page<Town> towns = townService.getAllTowns(pageable);
@@ -53,6 +62,7 @@ public class TownController {
         authenticationService.adminUserCheck();
         Town townDetails = new Town();
         townDetails.setName(request.getName());
+        townDetails.setCode(request.getCode());
 
         Town updatedTown = townService.updateTown(id, townDetails);
         return ResponseEntity.ok(updatedTown);

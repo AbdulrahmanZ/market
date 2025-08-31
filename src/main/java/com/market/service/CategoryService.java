@@ -28,6 +28,10 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
     }
 
+    public Category getCategoryByCode(String code) {
+        return categoryRepository.findByCode(code);
+    }
+
     public Page<Category> getAllCategories(Pageable pageable) {
         return categoryRepository.findAll(pageable);
     }
@@ -41,7 +45,15 @@ public class CategoryService {
             throw new RuntimeException("Category name already exists");
         }
 
+        // Check if code is being changed and if new code already exists
+        if (categoryDetails.getCode() != null &&
+                !categoryDetails.getCode().equals(category.getCode()) &&
+                categoryRepository.existsByCode(categoryDetails.getCode())) {
+            throw new RuntimeException("Category code already exists");
+        }
+
         category.setName(categoryDetails.getName());
+        category.setCode(categoryDetails.getCode());
 
         return categoryRepository.save(category);
     }

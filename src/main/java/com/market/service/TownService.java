@@ -27,6 +27,10 @@ public class TownService {
                 .orElseThrow(() -> new RuntimeException("Town not found"));
     }
 
+    public Town getTownByCode(String code) {
+        return townRepository.findByCode(code);
+    }
+
     public Page<Town> getAllTowns(Pageable pageable) {
         return townRepository.findAll(pageable);
     }
@@ -40,7 +44,15 @@ public class TownService {
             throw new RuntimeException("Town name already exists");
         }
 
+        // Check if code is being changed and if new code already exists
+        if (townDetails.getCode() != null &&
+                !townDetails.getCode().equals(town.getCode()) &&
+                townRepository.existsByCode(townDetails.getCode())) {
+            throw new RuntimeException("Town code already exists");
+        }
+
         town.setName(townDetails.getName());
+        town.setCode(townDetails.getCode());
         return townRepository.save(town);
     }
 

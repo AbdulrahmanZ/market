@@ -39,6 +39,15 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
+    @GetMapping("/code/{code}")
+    public ResponseEntity<Category> getCategoryByCode(@PathVariable String code) {
+        Category category = categoryService.getCategoryByCode(code);
+        if (category == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(category);
+    }
+
     @GetMapping
     public ResponseEntity<Page<Category>> getAllCategories(Pageable pageable) {
         Page<Category> categories = categoryService.getAllCategories(pageable);
@@ -54,6 +63,7 @@ public class CategoryController {
 
         Category categoryDetails = new Category();
         categoryDetails.setName(request.getName());
+        categoryDetails.setCode(request.getCode());
 
         Category updatedCategory = categoryService.updateCategory(id, categoryDetails);
         return ResponseEntity.ok(updatedCategory);

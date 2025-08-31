@@ -21,10 +21,16 @@ public class CategorySerializer extends JsonSerializer<Category> {
             // Only write name if the proxy is initialized or force initialization
             if (Hibernate.isInitialized(category)) {
                 gen.writeStringField("name", category.getName());
+                if (category.getCode() != null) {
+                    gen.writeStringField("code", category.getCode());
+                }
             } else {
                 // Force initialization and write name
                 try {
                     gen.writeStringField("name", category.getName());
+                    if (category.getCode() != null) {
+                        gen.writeStringField("code", category.getCode());
+                    }
                 } catch (Exception e) {
                     // If initialization fails, just write the ID
                     gen.writeNullField("name");

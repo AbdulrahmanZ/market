@@ -13,6 +13,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     boolean existsByName(String name);
 
+    boolean existsByCode(String code);
+
+    Category findByCode(String code);
+
     @Query("SELECT c FROM Category c WHERE c.name LIKE %?1%")
     Page<Category> findByContainName(String name, Pageable pageable);
 

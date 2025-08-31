@@ -21,10 +21,16 @@ public class TownSerializer extends JsonSerializer<Town> {
             // Only write name if the proxy is initialized or force initialization
             if (Hibernate.isInitialized(town)) {
                 gen.writeStringField("name", town.getName());
+                if (town.getCode() != null) {
+                    gen.writeStringField("code", town.getCode());
+                }
             } else {
                 // Force initialization and write name
                 try {
                     gen.writeStringField("name", town.getName());
+                    if (town.getCode() != null) {
+                        gen.writeStringField("code", town.getCode());
+                    }
                 } catch (Exception e) {
                     // If initialization fails, just write the ID
                     gen.writeNullField("name");
