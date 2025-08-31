@@ -1,5 +1,6 @@
 package com.market.service;
 
+import com.market.config.MarketMetricsConfig;
 import com.market.model.Item;
 import com.market.model.MediaType;
 import com.market.model.Shop;
@@ -18,25 +19,37 @@ public class ItemService {
     private final MediaStorageService mediaStorageService;
     private final FileStorageService fileStorageService;
     private final ShopService shopService;
+    private final MarketMetricsConfig marketMetricsConfig;
 
-    public ItemService(ItemRepository itemRepository, MediaStorageService mediaStorageService, FileStorageService fileStorageService, ShopService shopService) {
+    public ItemService(ItemRepository itemRepository,
+                       MediaStorageService mediaStorageService,
+                       FileStorageService fileStorageService,
+                       ShopService shopService,
+                       MarketMetricsConfig marketMetricsConfig) {
         this.itemRepository = itemRepository;
         this.mediaStorageService = mediaStorageService;
         this.fileStorageService = fileStorageService;
         this.shopService = shopService;
+        this.marketMetricsConfig = marketMetricsConfig;
     }
-    
+
     public Item createItem(Item item) {
         // Validate item limit before creating
         validateItemLimit(item.getShop().getId());
-        return itemRepository.save(item);
+
+        Item savedItem = itemRepository.save(item);
+
+        // Track item creation metric
+        marketMetricsConfig.incrementItemCreation();
+
+        return savedItem;
     }
-    
+
     public Item getItemById(Long id) {
         return itemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Item not found"));
     }
-    
+
     public List<Item> getAllItems() {
         return itemRepository.findAll();
     }
@@ -84,7 +97,7 @@ public class ItemService {
     public Page<Item> getItemsByPriceRange(Double minPrice, Double maxPrice, Pageable pageable) {
         return itemRepository.findByPriceBetween(minPrice, maxPrice, pageable);
     }
-    
+
     public Item updateItem(Long id, Item itemDetails) {
         Item item = getItemById(id);
 
@@ -103,7 +116,7 @@ public class ItemService {
 
         return itemRepository.save(item);
     }
-    
+
     public void deleteItem(Long id) {
         Item item = getItemById(id);
 
@@ -141,10 +154,10 @@ public class ItemService {
 
             if (currentItemCount >= shop.getItemLimit()) {
                 throw new ItemLimitExceededException(
-                    shop.getId(),
-                    shop.getName(),
-                    shop.getItemLimit(),
-                    currentItemCount
+                        shop.getId(),
+                        shop.getName(),
+                        shop.getItemLimit(),
+                        currentItemCount
                 );
             }
         }

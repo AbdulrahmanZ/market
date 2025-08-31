@@ -35,4 +35,6 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     boolean existsByNameAndOwnerId(String name, Long ownerId);
 
     long countByOwnerId(Long ownerId);
+    
+    long countByIsActiveTrue();
 }

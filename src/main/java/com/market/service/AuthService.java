@@ -6,6 +6,7 @@ import com.market.dto.RegisterRequest;
 import com.market.model.User;
 import com.market.repository.UserRepository;
 import com.market.exception.UserAlreadyExistsException;
+import com.market.config.MarketMetricsConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,10 @@ public class AuthService {
 
     @Autowired
     UserRepository userRepository;
+    
+    @Autowired
+    MarketMetricsConfig marketMetricsConfig;
+    
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -54,6 +59,9 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
+        // Track user registration metric
+        marketMetricsConfig.incrementUserRegistration();
+
         UserDetails userDetails = userDetailsService.loadUserByUsername(savedUser.getPhone());
         String jwtToken = jwtService.generateToken(userDetails);
 
@@ -69,6 +77,8 @@ public class AuthService {
                     )
             );
         } catch (Exception e) {
+            // Track failed login attempt
+            marketMetricsConfig.incrementLoginAttempts();
             throw new RuntimeException("Invalid phone number or password");
         }
 
@@ -76,6 +86,9 @@ public class AuthService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         if (user.getDeleted())
             throw new RuntimeException("This user has been deleted");
+
+        // Track successful login attempt
+        marketMetricsConfig.incrementLoginAttempts();
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getPhone());
         String jwtToken = jwtService.generateToken(userDetails);

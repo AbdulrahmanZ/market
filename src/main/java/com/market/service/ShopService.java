@@ -1,5 +1,6 @@
 package com.market.service;
 
+import com.market.config.MarketMetricsConfig;
 import com.market.exception.ShopLimitExceededException;
 import com.market.model.Shop;
 import com.market.model.Category;
@@ -20,14 +21,17 @@ public class ShopService {
     private final TownService townService;
     private final UserService userService;
     private final FileStorageService fileStorageService;
+    private final MarketMetricsConfig marketMetricsConfig;
 
     public ShopService(ShopRepository shopRepository, CategoryService categoryService,
-                       TownService townService, UserService userService, FileStorageService fileStorageService) {
+                       TownService townService, UserService userService, FileStorageService fileStorageService,
+                       MarketMetricsConfig marketMetricsConfig) {
         this.shopRepository = shopRepository;
         this.categoryService = categoryService;
         this.townService = townService;
         this.userService = userService;
         this.fileStorageService = fileStorageService;
+        this.marketMetricsConfig = marketMetricsConfig;
     }
 
     public Shop createShop(Shop shop) {
@@ -54,7 +58,12 @@ public class ShopService {
             throw new RuntimeException("Shop name already exists for this owner");
         }
 
-        return shopRepository.save(shop);
+        Shop savedShop = shopRepository.save(shop);
+        
+        // Track shop creation metric
+        marketMetricsConfig.incrementShopCreation();
+
+        return savedShop;
     }
 
     public Shop getShopById(Long id) {
