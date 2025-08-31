@@ -10,7 +10,7 @@ public class Town extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String code;
 
     // Getters and Setters

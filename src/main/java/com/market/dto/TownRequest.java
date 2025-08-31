@@ -1,16 +1,13 @@
-package com.market.model;
+package com.market.dto;
 
-import com.market.model.base.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
-@Entity
-@Table(name = "_categories")
-public class Category extends BaseEntity {
+public class TownRequest {
 
-    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Name is required")
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Code is required")
     private String code;
 
     // Getters and Setters
@@ -29,4 +26,5 @@ public class Category extends BaseEntity {
     public void setCode(String code) {
         this.code = code;
     }
+
 }

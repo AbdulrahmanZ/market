@@ -1,5 +1,6 @@
 package com.market.controller;
 
+import com.market.dto.TownRequest;
 import com.market.model.Town;
 import com.market.service.AuthenticationService;
 import com.market.service.TownService;
@@ -27,8 +28,13 @@ public class TownController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Town> createTown(@Valid @RequestBody Town town) {
+    public ResponseEntity<Town> createTown(@Valid @RequestBody TownRequest townRequest) {
         authenticationService.adminUserCheck();
+
+        Town town = new Town();
+        town.setName(townRequest.getName());
+        town.setCode(townRequest.getCode());
+
         Town createdTown = townService.createTown(town);
         return ResponseEntity.ok(createdTown);
     }
@@ -60,11 +66,12 @@ public class TownController {
     public ResponseEntity<Town> updateTown(@PathVariable Long id,
                                            @Valid @RequestBody Town request) {
         authenticationService.adminUserCheck();
-        Town townDetails = new Town();
-        townDetails.setName(request.getName());
-        townDetails.setCode(request.getCode());
 
-        Town updatedTown = townService.updateTown(id, townDetails);
+        Town existedTown = townService.getTownById(id);
+        if (request.getName() != null) existedTown.setName(request.getName());
+        if (request.getCode() != null) existedTown.setCode(request.getCode());
+
+        Town updatedTown = townService.updateTown(id, existedTown);
         return ResponseEntity.ok(updatedTown);
     }
 

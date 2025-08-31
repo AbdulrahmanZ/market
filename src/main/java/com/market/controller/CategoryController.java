@@ -1,5 +1,6 @@
 package com.market.controller;
 
+import com.market.dto.CategoryRequest;
 import com.market.model.Category;
 import com.market.service.AuthenticationService;
 import com.market.service.CategoryService;
@@ -27,8 +28,13 @@ public class CategoryController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Category> createCategory(@Valid @RequestBody Category category) {
+    public ResponseEntity<Category> createCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
         authenticationService.adminUserCheck();
+
+        Category category = new Category();
+        category.setName(categoryRequest.getName());
+        category.setCode(categoryRequest.getCode());
+
         Category createdCategory = categoryService.createCategory(category);
         return ResponseEntity.ok(createdCategory);
     }
@@ -61,11 +67,11 @@ public class CategoryController {
                                                    @RequestBody Category request) {
         authenticationService.adminUserCheck();
 
-        Category categoryDetails = new Category();
-        categoryDetails.setName(request.getName());
-        categoryDetails.setCode(request.getCode());
+        Category existedCategory = categoryService.getCategoryById(id);
+        if (request.getName() != null) existedCategory.setName(request.getName());
+        if (request.getCode() != null) existedCategory.setCode(request.getCode());
 
-        Category updatedCategory = categoryService.updateCategory(id, categoryDetails);
+        Category updatedCategory = categoryService.updateCategory(id, existedCategory);
         return ResponseEntity.ok(updatedCategory);
     }
 

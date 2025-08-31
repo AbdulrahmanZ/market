@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -110,6 +109,7 @@ public class ShopController {
                 // Check if user owns the shop
                 authenticationService.requireOwnership(existingShop.getOwner().getId());
             }
+
             if (shopRequest != null) {
                 // Update fields only if provided (preserve existing values)
                 if (shopRequest.getName() != null) {
