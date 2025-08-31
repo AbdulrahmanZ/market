@@ -90,13 +90,7 @@ public class ItemService {
     }
 
     public void deleteItem(Long id) {
-        Item item = getItemById(id);
-
-        // Delete media from file storage before deleting item
-        if (item.getShop() != null) {
-            mediaStorageService.deleteItemMedia(item.getShop().getId(), item.getId());
-        }
-        itemRepository.deleteById(id);
+        itemRepository.softDeleteById(id);
     }
 
     // Media management methods

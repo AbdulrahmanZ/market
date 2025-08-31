@@ -4,6 +4,7 @@ import com.market.model.Item;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -43,4 +44,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             @Param("townId") Long townId,
             Pageable pageable
     );
+
+    @Modifying
+    @Query("update Item i SET i.deleted = true WHERE i.id = :id")
+    void softDeleteById(Long id);
 }

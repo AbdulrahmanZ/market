@@ -10,6 +10,9 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private Boolean deleted = false;
+
     public Long getId() {
         return id;
     }
@@ -25,6 +28,7 @@ public class BaseEntity {
     protected void onCreate() {
         createdAt = new Date();
         updatedAt = new Date();
+        deleted = false;
     }
 
     @PreUpdate
@@ -46,5 +50,13 @@ public class BaseEntity {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

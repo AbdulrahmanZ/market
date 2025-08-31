@@ -45,8 +45,7 @@ public class TownService {
     }
 
     public void deleteTown(Long id) {
-        Town town = getTownById(id);
-        townRepository.delete(town);
+        townRepository.softDeleteById(id);
     }
 
     public Page<Town> getTownByContainingName(String name, Pageable pageable) {

@@ -127,14 +127,7 @@ public class ShopService {
     }
 
     public void deleteShop(Long id) {
-        Shop shop = getShopById(id);
-
-        // Delete profile image file if exists
-        if (shop.getImageKey() != null && !shop.getImageKey().isEmpty()) {
-            fileStorageService.deleteFile(shop.getImageKey());
-        }
-
-        shopRepository.delete(shop);
+        shopRepository.softDeleteById(id);
     }
 
     public boolean isShopOwner(Long shopId, Long userId) {

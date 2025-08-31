@@ -47,8 +47,7 @@ public class CategoryService {
     }
 
     public void deleteCategory(Long id) {
-        Category category = getCategoryById(id);
-        categoryRepository.delete(category);
+        categoryRepository.softDeleteById(id);
     }
 
     public Page<Category> getCategoryByContainingName(String name, Pageable pageable) {

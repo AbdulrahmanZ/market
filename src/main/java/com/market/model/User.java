@@ -23,9 +23,6 @@ public class User extends BaseEntity {
     @Column()
     private Boolean admin = false;
 
-    @Column()
-    private Boolean deleted = false;
-
     @Column(nullable = false)
     private Integer shopLimit = 1; // Default shop limit for new users
 
@@ -69,14 +66,6 @@ public class User extends BaseEntity {
 
     public void setAdmin(Boolean admin) {
         this.admin = admin;
-    }
-
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
     }
 
     public Integer getShopLimit() {

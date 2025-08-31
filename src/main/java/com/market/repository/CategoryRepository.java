@@ -4,6 +4,7 @@ import com.market.model.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Query("SELECT c FROM Category c WHERE c.name LIKE %?1%")
     Page<Category> findByContainName(String name, Pageable pageable);
+
+    @Modifying
+    @Query("update Category c SET c.deleted = true WHERE c.id = :id")
+    void softDeleteById(Long id);
 }

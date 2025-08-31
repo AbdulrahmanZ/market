@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -35,4 +36,8 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
     boolean existsByNameAndOwnerId(String name, Long ownerId);
 
     long countByOwnerId(Long ownerId);
+
+    @Modifying
+    @Query("update Shop s SET s.deleted = true WHERE s.id = :id")
+    void softDeleteById(Long id);
 }
