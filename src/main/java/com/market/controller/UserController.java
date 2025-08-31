@@ -1,5 +1,6 @@
 package com.market.controller;
 
+import com.market.dto.UserRequest;
 import com.market.model.User;
 import com.market.service.AuthenticationService;
 import com.market.service.UserService;
@@ -28,8 +29,16 @@ public class UserController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserRequest userRequest) {
         authenticationService.adminUserCheck();
+
+        User user = new User();
+        user.setUsername(userRequest.getUsername());
+        user.setPassword(userRequest.getPassword());
+        user.setPhone(userRequest.getPhone());
+        user.setAdmin(userRequest.getAdmin());
+        user.setShopLimit(userRequest.getShopLimit());
+
         User createdUser = userService.createUser(user);
         return ResponseEntity.ok(createdUser);
     }
