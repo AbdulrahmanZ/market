@@ -19,6 +19,9 @@ public class TownService {
         if (townRepository.existsByName(town.getName())) {
             throw new RuntimeException("Town name already exists");
         }
+        if (townRepository.existsByCode(town.getCode())) {
+            throw new RuntimeException("Town code already exists");
+        }
         return townRepository.save(town);
     }
 

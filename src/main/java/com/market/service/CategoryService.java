@@ -20,6 +20,9 @@ public class CategoryService {
         if (categoryRepository.existsByName(category.getName())) {
             throw new RuntimeException("Category name already exists");
         }
+        if (categoryRepository.existsByCode(category.getCode())) {
+            throw new RuntimeException("Category code already exists");
+        }
         return categoryRepository.save(category);
     }
 
