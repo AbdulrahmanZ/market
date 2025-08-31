@@ -29,21 +29,7 @@ public class ItemService {
     public Item createItem(Item item) {
         // Validate item limit before creating
         validateItemLimit(item.getShop().getId());
-
-        Item savedItem = itemRepository.save(item);
-
-        // Save media URL to file storage if media exists
-        if (savedItem.getMediaUrl() != null && savedItem.getShop() != null) {
-            mediaStorageService.saveItemMedia(
-                savedItem.getShop().getId(),
-                savedItem.getId(),
-                savedItem.getMediaUrl(),
-                savedItem.getMediaType(),
-                savedItem.getMediaFileName()
-            );
-        }
-
-        return savedItem;
+        return itemRepository.save(item);
     }
     
     public Item getItemById(Long id) {
@@ -105,27 +91,17 @@ public class ItemService {
         item.setDescription(itemDetails.getDescription());
         item.setName(itemDetails.getName());
         item.setPrice(itemDetails.getPrice());
-        item.setMediaUrl(itemDetails.getMediaUrl());
-        item.setMediaType(itemDetails.getMediaType());
-        item.setMediaFileName(itemDetails.getMediaFileName());
 
-        Item updatedItem = itemRepository.save(item);
-
-        // Update media URL in file storage if media exists
-        if (updatedItem.getMediaUrl() != null && updatedItem.getShop() != null) {
-            mediaStorageService.saveItemMedia(
-                updatedItem.getShop().getId(),
-                updatedItem.getId(),
-                updatedItem.getMediaUrl(),
-                updatedItem.getMediaType(),
-                updatedItem.getMediaFileName()
-            );
-        } else if (updatedItem.getShop() != null) {
-            // If media was removed, delete from file storage
-            mediaStorageService.deleteItemMedia(updatedItem.getShop().getId(), updatedItem.getId());
+        // Handle imageKey update with cleanup (similar to ShopService)
+        if (itemDetails.getImageKey() != null && !itemDetails.getImageKey().equals(item.getImageKey())) {
+            // Delete old image if exists and different from new one
+            if (item.getImageKey() != null && !item.getImageKey().isEmpty()) {
+                fileStorageService.deleteFile(item.getImageKey());
+            }
+            item.setImageKey(itemDetails.getImageKey());
         }
 
-        return updatedItem;
+        return itemRepository.save(item);
     }
     
     public void deleteItem(Long id) {
@@ -135,12 +111,6 @@ public class ItemService {
         if (item.getShop() != null) {
             mediaStorageService.deleteItemMedia(item.getShop().getId(), item.getId());
         }
-
-        // Delete actual media file if exists
-        if (item.getMediaUrl() != null && !item.getMediaUrl().isEmpty()) {
-            fileStorageService.deleteFile(item.getMediaUrl());
-        }
-
         itemRepository.deleteById(id);
     }
 

@@ -27,11 +27,9 @@ public class ItemSerializer extends JsonSerializer<Item> {
             if (item.getPrice() != null) {
                 gen.writeNumberField("price", item.getPrice());
             }
-            if (item.getMediaUrl() != null) {
-                gen.writeStringField("mediaUrl", item.getMediaUrl());
-            }
-            if (item.getMediaType() != null) {
-                gen.writeStringField("mediaType", item.getMediaType().toString());
+
+            if (item.getImageKey() != null) {
+                gen.writeStringField("imageKey", item.getImageKey());
             }
             
             // Handle lazy-loaded Shop relationship

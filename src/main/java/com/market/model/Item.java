@@ -26,13 +26,8 @@ public class Item extends BaseEntity {
     @JsonSerialize(using = ShopSerializer.class)
     private Shop shop;
 
-    // Single media file support (image or video)
-    private String mediaUrl;
-
-    @Enumerated(EnumType.STRING)
-    private MediaType mediaType;
-
-    private String mediaFileName;
+    // New imageKey field for cleaner image handling (similar to Shop)
+    private String imageKey;
 
     // Getters and Setters
     public String getDescription() {
@@ -67,28 +62,11 @@ public class Item extends BaseEntity {
         this.shop = shop;
     }
 
-    public String getMediaUrl() {
-        return mediaUrl;
+    public String getImageKey() {
+        return imageKey;
     }
 
-    public void setMediaUrl(String mediaUrl) {
-        this.mediaUrl = mediaUrl;
+    public void setImageKey(String imageKey) {
+        this.imageKey = imageKey;
     }
-
-    public MediaType getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(MediaType mediaType) {
-        this.mediaType = mediaType;
-    }
-
-    public String getMediaFileName() {
-        return mediaFileName;
-    }
-
-    public void setMediaFileName(String mediaFileName) {
-        this.mediaFileName = mediaFileName;
-    }
-
 }

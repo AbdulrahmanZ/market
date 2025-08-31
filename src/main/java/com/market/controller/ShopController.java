@@ -25,16 +25,12 @@ import org.springframework.web.bind.annotation.*;
 public class ShopController {
 
     private static final Logger logger = LoggerFactory.getLogger(ShopController.class);
-
     @Autowired
     ShopService shopService;
-
     @Autowired
     FileStorageService fileStorageService;
-
     @Autowired
     AuthenticationService authenticationService;
-
     @Autowired
     ShopRepository shopRepository;
 
@@ -182,22 +178,6 @@ public class ShopController {
 
         shopService.deleteShop(id);
         return ResponseEntity.noContent().build();
-    }
-
-
-    /****************************************************************************/
-
-    @GetMapping("/{shopId}/is-owner/{userId}")
-    public ResponseEntity<Boolean> isShopOwner(@PathVariable Long shopId,
-                                               @PathVariable Long userId) {
-        boolean isOwner = shopService.isShopOwner(shopId, userId);
-        return ResponseEntity.ok(isOwner);
-    }
-
-    @GetMapping("/user/{userId}/count")
-    public ResponseEntity<Long> getShopCountByUser(@PathVariable Long userId) {
-        long shopCount = shopService.getShopCountByUser(userId);
-        return ResponseEntity.ok(shopCount);
     }
 
 }

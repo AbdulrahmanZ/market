@@ -121,26 +121,6 @@ public class FileController {
         }
     }
     
-    @GetMapping("/item/{itemId}/media")
-    public ResponseEntity<Resource> getItemMediaById(@PathVariable Long itemId, HttpServletRequest request) {
-        logger.debug("Streaming item media: itemId={}", itemId);
-        
-        try {
-            Item item = itemService.getItemById(itemId);
-            
-            if (item.getMediaUrl() == null || item.getMediaUrl().isEmpty()) {
-                logger.debug("Item {} has no media", itemId);
-                return ResponseEntity.notFound().build();
-            }
-            
-            return streamFile(item.getMediaUrl(), request, "item-media-" + itemId);
-            
-        } catch (Exception e) {
-            logger.error("Error streaming item media: itemId={}", itemId, e);
-            return ResponseEntity.notFound().build();
-        }
-    }
-    
     @GetMapping("/shop-profiles/{shopId}/{filename:.+}")
     public ResponseEntity<Resource> getShopProfileByFilename(@PathVariable Long shopId, 
                                                            @PathVariable String filename, 

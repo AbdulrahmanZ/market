@@ -1,6 +1,5 @@
 package com.market.dto;
 
-import com.market.model.MediaType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.NotBlank;
@@ -19,9 +18,7 @@ public class ItemRequest {
     @NotNull(message = "Shop ID is required")
     private Long shopId;
 
-    private String mediaUrl;
-    private MediaType mediaType;
-    private String mediaFileName;
+    private String imageKey;
 
 
     public String getDescription() {
@@ -56,27 +53,11 @@ public class ItemRequest {
         this.shopId = shopId;
     }
 
-    public String getMediaUrl() {
-        return mediaUrl;
+    public String getImageKey() {
+        return imageKey;
     }
 
-    public void setMediaUrl(String mediaUrl) {
-        this.mediaUrl = mediaUrl;
-    }
-
-    public MediaType getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(MediaType mediaType) {
-        this.mediaType = mediaType;
-    }
-
-    public String getMediaFileName() {
-        return mediaFileName;
-    }
-
-    public void setMediaFileName(String mediaFileName) {
-        this.mediaFileName = mediaFileName;
+    public void setImageKey(String imageKey) {
+        this.imageKey = imageKey;
     }
 }
