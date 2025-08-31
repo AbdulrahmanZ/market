@@ -7,8 +7,8 @@ public class ItemLimitExceededException extends RuntimeException {
     private final Integer currentCount;
 
     public ItemLimitExceededException(Long shopId, String shopName, Integer itemLimit, Integer currentCount) {
-        super(String.format("Cannot add item to shop '%s'. Item limit of %d has been reached. Current items: %d", 
-              shopName, itemLimit, currentCount));
+        super(String.format("Cannot add item to shop '%s'. Item limit of %d has been reached. Current items: %d",
+                shopName, itemLimit, currentCount));
         this.shopId = shopId;
         this.shopName = shopName;
         this.itemLimit = itemLimit;

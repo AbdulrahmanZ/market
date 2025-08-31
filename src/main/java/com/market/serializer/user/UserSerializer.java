@@ -13,11 +13,11 @@ public class UserSerializer extends JsonSerializer<User> {
     @Override
     public void serialize(User user, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
-        
+
         if (user != null) {
             // Always write the ID
             gen.writeNumberField("id", user.getId());
-            
+
             // Only write fields if the proxy is initialized or force initialization
             if (Hibernate.isInitialized(user)) {
                 gen.writeStringField("username", user.getUsername());
@@ -54,7 +54,7 @@ public class UserSerializer extends JsonSerializer<User> {
                 }
             }
         }
-        
+
         gen.writeEndObject();
     }
 }

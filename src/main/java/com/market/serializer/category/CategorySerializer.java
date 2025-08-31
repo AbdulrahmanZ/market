@@ -13,11 +13,11 @@ public class CategorySerializer extends JsonSerializer<Category> {
     @Override
     public void serialize(Category category, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
-        
+
         if (category != null) {
             // Always write the ID
             gen.writeNumberField("id", category.getId());
-            
+
             // Only write name if the proxy is initialized or force initialization
             if (Hibernate.isInitialized(category)) {
                 gen.writeStringField("name", category.getName());
@@ -31,7 +31,7 @@ public class CategorySerializer extends JsonSerializer<Category> {
                 }
             }
         }
-        
+
         gen.writeEndObject();
     }
 }

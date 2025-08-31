@@ -8,6 +8,7 @@ import com.market.exception.ItemLimitExceededException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 
@@ -25,18 +26,18 @@ public class ItemService {
         this.fileStorageService = fileStorageService;
         this.shopService = shopService;
     }
-    
+
     public Item createItem(Item item) {
         // Validate item limit before creating
         validateItemLimit(item.getShop().getId());
         return itemRepository.save(item);
     }
-    
+
     public Item getItemById(Long id) {
         return itemRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Item not found"));
     }
-    
+
     public List<Item> getAllItems() {
         return itemRepository.findAll();
     }
@@ -68,7 +69,7 @@ public class ItemService {
     public Page<Item> getItemsByPriceRange(Double minPrice, Double maxPrice, Pageable pageable) {
         return itemRepository.findByPriceBetween(minPrice, maxPrice, pageable);
     }
-    
+
     public Item updateItem(Long id, Item itemDetails) {
         Item item = getItemById(id);
 
@@ -87,7 +88,7 @@ public class ItemService {
 
         return itemRepository.save(item);
     }
-    
+
     public void deleteItem(Long id) {
         Item item = getItemById(id);
 
@@ -125,10 +126,10 @@ public class ItemService {
 
             if (currentItemCount >= shop.getItemLimit()) {
                 throw new ItemLimitExceededException(
-                    shop.getId(),
-                    shop.getName(),
-                    shop.getItemLimit(),
-                    currentItemCount
+                        shop.getId(),
+                        shop.getName(),
+                        shop.getItemLimit(),
+                        currentItemCount
                 );
             }
         }

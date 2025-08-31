@@ -9,20 +9,20 @@ public class ShopRequest {
 
     @NotBlank(message = "Shop name is required")
     private String name;
-    
+
     private String description;
     private String address;
     private String phone;
 
     @Min(value = 1, message = "Item limit must be at least 1")
     private Integer itemLimit;
-    
+
     @NotNull(message = "Category ID is required")
     private Long categoryId;
-    
+
     @NotNull(message = "Town ID is required")
     private Long townId;
-    
+
     @NotNull(message = "Owner ID is required")
     private Long ownerId;
 
@@ -93,7 +93,7 @@ public class ShopRequest {
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
     }
-    
+
     public String getImageKey() {
         return imageKey;
     }
@@ -101,7 +101,7 @@ public class ShopRequest {
     public void setImageKey(String imageKey) {
         this.imageKey = imageKey;
     }
-    
+
     public Boolean getIsActive() {
         return isActive;
     }

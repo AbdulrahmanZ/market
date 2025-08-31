@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    
+
     @Autowired
     UserRepository userRepository;
 
@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
         User user = userRepository.findByPhone(phone)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with phone: " + phone));
-        
+
         return new org.springframework.security.core.userdetails.User(
                 user.getPhone(),
                 user.getPassword(),

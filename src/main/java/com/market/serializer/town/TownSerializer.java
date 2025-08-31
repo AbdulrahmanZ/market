@@ -13,11 +13,11 @@ public class TownSerializer extends JsonSerializer<Town> {
     @Override
     public void serialize(Town town, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
-        
+
         if (town != null) {
             // Always write the ID
             gen.writeNumberField("id", town.getId());
-            
+
             // Only write name if the proxy is initialized or force initialization
             if (Hibernate.isInitialized(town)) {
                 gen.writeStringField("name", town.getName());
@@ -31,7 +31,7 @@ public class TownSerializer extends JsonSerializer<Town> {
                 }
             }
         }
-        
+
         gen.writeEndObject();
     }
 }

@@ -13,11 +13,11 @@ public class ItemSerializer extends JsonSerializer<Item> {
     @Override
     public void serialize(Item item, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
-        
+
         if (item != null) {
             // Always write basic fields
             gen.writeNumberField("id", item.getId());
-            
+
             if (item.getName() != null) {
                 gen.writeStringField("name", item.getName());
             }
@@ -31,7 +31,7 @@ public class ItemSerializer extends JsonSerializer<Item> {
             if (item.getImageKey() != null) {
                 gen.writeStringField("imageKey", item.getImageKey());
             }
-            
+
             // Handle lazy-loaded Shop relationship
             if (item.getShop() != null) {
                 gen.writeFieldName("shop");
@@ -51,7 +51,7 @@ public class ItemSerializer extends JsonSerializer<Item> {
                     if (item.getShop().getImageKey() != null) {
                         gen.writeStringField("imageKey", item.getShop().getImageKey());
                     }
-                    
+
                     // Include shop's category and town if available
                     if (item.getShop().getCategory() != null) {
                         gen.writeFieldName("category");
@@ -64,7 +64,7 @@ public class ItemSerializer extends JsonSerializer<Item> {
                         }
                         gen.writeEndObject();
                     }
-                    
+
                     if (item.getShop().getTown() != null) {
                         gen.writeFieldName("town");
                         gen.writeStartObject();
@@ -76,7 +76,7 @@ public class ItemSerializer extends JsonSerializer<Item> {
                         }
                         gen.writeEndObject();
                     }
-                    
+
                     gen.writeEndObject();
                 } else {
                     try {
@@ -95,7 +95,7 @@ public class ItemSerializer extends JsonSerializer<Item> {
                     }
                 }
             }
-            
+
             // Timestamps
             if (item.getCreatedAt() != null) {
                 gen.writeStringField("createdAt", item.getCreatedAt().toString());
@@ -104,7 +104,7 @@ public class ItemSerializer extends JsonSerializer<Item> {
                 gen.writeStringField("updatedAt", item.getUpdatedAt().toString());
             }
         }
-        
+
         gen.writeEndObject();
     }
 }

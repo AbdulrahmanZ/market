@@ -13,7 +13,7 @@ public class ShopSerializer extends JsonSerializer<Shop> {
     @Override
     public void serialize(Shop shop, JsonGenerator gen, SerializerProvider serializers) throws IOException {
         gen.writeStartObject();
-        
+
         if (shop != null) {
             // Always write basic fields
             gen.writeNumberField("id", shop.getId());
@@ -35,7 +35,7 @@ public class ShopSerializer extends JsonSerializer<Shop> {
             if (shop.getImageKey() != null) {
                 gen.writeStringField("imageKey", shop.getImageKey());
             }
-            
+
             // Handle lazy-loaded relationships
             // Category
             if (shop.getCategory() != null) {
@@ -59,7 +59,7 @@ public class ShopSerializer extends JsonSerializer<Shop> {
                     }
                 }
             }
-            
+
             // Town
             if (shop.getTown() != null) {
                 gen.writeFieldName("town");
@@ -82,7 +82,7 @@ public class ShopSerializer extends JsonSerializer<Shop> {
                     }
                 }
             }
-            
+
             // Owner (User)
             if (shop.getOwner() != null) {
                 gen.writeFieldName("owner");
@@ -107,7 +107,7 @@ public class ShopSerializer extends JsonSerializer<Shop> {
                     }
                 }
             }
-            
+
             // Timestamps
             if (shop.getCreatedAt() != null) {
                 gen.writeStringField("createdAt", shop.getCreatedAt().toString());
@@ -116,7 +116,7 @@ public class ShopSerializer extends JsonSerializer<Shop> {
                 gen.writeStringField("updatedAt", shop.getUpdatedAt().toString());
             }
         }
-        
+
         gen.writeEndObject();
     }
 }

@@ -16,36 +16,36 @@ import java.util.UUID;
 
 @Service
 public class FileStorageService {
-    
+
     @Value("${file.upload.dir:uploads}")
     private String uploadDir;
-    
+
     @Value("${file.upload.shop-profiles:shop-profiles}")
     private String shopProfilesDir;
-    
+
     @Value("${file.upload.items:items}")
     private String itemsDir;
-    
+
     public String storeShopProfileImage(MultipartFile file, Long shopId) throws IOException {
         validateImageFile(file);
-        
+
         // Create directory structure: uploads/shop-profiles/shop-{id}/
         Path shopProfilePath = Paths.get(uploadDir, shopProfilesDir, "shop-" + shopId);
         Files.createDirectories(shopProfilePath);
-        
+
         // Generate unique filename
         String originalFilename = file.getOriginalFilename();
         String fileExtension = getFileExtension(originalFilename);
         String uniqueFilename = "profile-" + UUID.randomUUID().toString() + fileExtension;
-        
+
         // Store file
         Path targetLocation = shopProfilePath.resolve(uniqueFilename);
         Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-        
+
         // Return relative path for storage in database
         return shopProfilesDir + "/shop-" + shopId + "/" + uniqueFilename;
     }
-    
+
     public String storeItemMedia(MultipartFile file, Long shopId, Long itemId) throws IOException {
         validateMediaFile(file);
 
@@ -65,7 +65,7 @@ public class FileStorageService {
         // Return relative path for storage in database
         return itemsDir + "/shop-" + shopId + "/" + uniqueFilename;
     }
-    
+
     public void deleteFile(String relativePath) {
         try {
             Path filePath = Paths.get(uploadDir, relativePath);
@@ -75,38 +75,38 @@ public class FileStorageService {
             System.err.println("Failed to delete file: " + relativePath + " - " + e.getMessage());
         }
     }
-    
+
     public boolean fileExists(String relativePath) {
         Path filePath = Paths.get(uploadDir, relativePath);
         return Files.exists(filePath);
     }
-    
+
     public Path getFilePath(String relativePath) {
         return Paths.get(uploadDir, relativePath);
     }
-    
+
     private void validateImageFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("File is empty");
         }
-        
+
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
             throw new IOException("File must be an image");
         }
-        
+
         // Check file size (max 5MB)
         long maxSize = 5 * 1024 * 1024; // 5MB
         if (file.getSize() > maxSize) {
             throw new IOException("File size must be less than 5MB");
         }
-        
+
         // Check allowed extensions
         String filename = file.getOriginalFilename();
         if (filename == null) {
             throw new IOException("Invalid filename");
         }
-        
+
         String extension = getFileExtension(filename).toLowerCase();
         if (!extension.matches("\\.(jpg|jpeg|png|gif|webp)")) {
             throw new IOException("Only JPG, JPEG, PNG, GIF, and WebP files are allowed");
@@ -147,7 +147,7 @@ public class FileStorageService {
             }
         }
     }
-    
+
     private String getFileExtension(String filename) {
         if (filename == null || filename.lastIndexOf('.') == -1) {
             return "";
