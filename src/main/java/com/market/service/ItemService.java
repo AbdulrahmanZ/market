@@ -53,22 +53,6 @@ public class ItemService {
         return itemRepository.findByShopId(shopId, pageable);
     }
 
-    public List<Item> getItemsByMediaType(MediaType mediaType) {
-        return itemRepository.findByMediaType(mediaType);
-    }
-
-    public Page<Item> getItemsByMediaType(MediaType mediaType, Pageable pageable) {
-        return itemRepository.findByMediaType(mediaType, pageable);
-    }
-
-    public List<Item> getItemsByShopAndMediaType(Long shopId, MediaType mediaType) {
-        return itemRepository.findByShopIdAndMediaType(shopId, mediaType);
-    }
-
-    public Page<Item> getItemsByShopAndMediaType(Long shopId, MediaType mediaType, Pageable pageable) {
-        return itemRepository.findByShopIdAndMediaType(shopId, mediaType, pageable);
-    }
-
     public List<Item> searchItemsByDescription(String description) {
         return itemRepository.findByDescriptionContainingIgnoreCase(description);
     }
