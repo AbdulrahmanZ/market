@@ -24,6 +24,9 @@ public class UserSerializer extends JsonSerializer<User> {
                 gen.writeStringField("phone", user.getPhone());
                 gen.writeStringField("active", String.valueOf(user.getActive()));
                 gen.writeStringField("admin", String.valueOf(user.getAdmin()));
+                if (user.getShopLimit() != null) {
+                    gen.writeNumberField("shopLimit", user.getShopLimit());
+                }
                 // Never serialize password for security
                 if (user.getCreatedAt() != null) {
                     gen.writeStringField("createdAt", user.getCreatedAt().toString());
@@ -38,6 +41,9 @@ public class UserSerializer extends JsonSerializer<User> {
                     gen.writeStringField("phone", user.getPhone());
                     gen.writeStringField("active", String.valueOf(user.getActive()));
                     gen.writeStringField("admin", String.valueOf(user.getAdmin()));
+                    if (user.getShopLimit() != null) {
+                        gen.writeNumberField("shopLimit", user.getShopLimit());
+                    }
                     if (user.getCreatedAt() != null) {
                         gen.writeStringField("createdAt", user.getCreatedAt().toString());
                     }
