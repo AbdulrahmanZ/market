@@ -13,6 +13,9 @@ public class Category extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String code;
 
+    @Column
+    private String imageKey;
+
     // Getters and Setters
     public String getName() {
         return name;
@@ -28,5 +31,13 @@ public class Category extends BaseEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getImageKey() {
+        return imageKey;
+    }
+
+    public void setImageKey(String imageKey) {
+        this.imageKey = imageKey;
     }
 }

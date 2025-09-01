@@ -13,9 +13,11 @@
 
     <groupId>com.market</groupId>
     <artifactId>market</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>market</name>
     <description>Market Application with Spring Boot and Flutter</description>
+
+    <packaging>war</packaging>
 
     <properties>
         <java.version>17</java.version>
