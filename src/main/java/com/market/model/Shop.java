@@ -1,5 +1,7 @@
 package com.market.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.market.model.base.BaseEntity;
 import com.market.serializer.category.CategorySerializer;
@@ -8,6 +10,7 @@ import com.market.serializer.town.TownSerializer;
 import com.market.serializer.user.UserSerializer;
 import jakarta.persistence.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Entity
@@ -50,6 +53,12 @@ public class Shop extends BaseEntity {
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Item> items;
 
+    @Column
+    private String workingHours;
+
+    @Column
+    private String workingDays;
+
     public Shop(String name,
                 String description,
                 String address,
@@ -58,7 +67,9 @@ public class Shop extends BaseEntity {
                 String imageKey,
                 Category category,
                 Town town,
-                User owner) {
+                User owner,
+                String workingHours,
+                String workingDays) {
         this.name = name;
         this.description = description;
         this.address = address;
@@ -68,6 +79,8 @@ public class Shop extends BaseEntity {
         this.category = category;
         this.town = town;
         this.owner = owner;
+        this.workingHours = workingHours;
+        this.workingDays = workingDays;
     }
 
     public Shop() {
@@ -167,5 +180,21 @@ public class Shop extends BaseEntity {
         if (items == null)
             return 0;
         return items.size();
+    }
+
+    public HashMap getWorkingHours() throws JsonProcessingException {
+        return new ObjectMapper().readValue(workingHours, HashMap.class);
+    }
+
+    public void setWorkingHours(String workingHours) {
+        this.workingHours = workingHours;
+    }
+
+    public HashMap getWorkingDays() throws JsonProcessingException {
+        return new ObjectMapper().readValue(workingDays, HashMap.class);
+    }
+
+    public void setWorkingDays(String workingDays) {
+        this.workingDays = workingDays;
     }
 }

@@ -4,8 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Min;
 
-public class ShopRequest {
+import java.util.HashMap;
 
+public class ShopRequest {
 
     @NotBlank(message = "Shop name is required")
     private String name;
@@ -28,6 +29,10 @@ public class ShopRequest {
 
     private String imageKey;
     private Boolean isActive;
+
+    private HashMap<String, String> workingHours;
+
+    private HashMap<String, String> workingDays;
 
     // Getters and Setters
     public String getName() {
@@ -110,4 +115,19 @@ public class ShopRequest {
         this.isActive = isActive;
     }
 
+    public HashMap<String, String> getWorkingHours() {
+        return workingHours;
+    }
+
+    public void setWorkingHours(HashMap<String, String> workingHours) {
+        this.workingHours = workingHours;
+    }
+
+    public HashMap<String, String> getWorkingDays() {
+        return workingDays;
+    }
+
+    public void setWorkingDays(HashMap<String, String> workingDays) {
+        this.workingDays = workingDays;
+    }
 }

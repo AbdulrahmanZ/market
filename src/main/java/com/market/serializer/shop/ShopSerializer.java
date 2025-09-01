@@ -115,6 +115,22 @@ public class ShopSerializer extends JsonSerializer<Shop> {
             if (shop.getUpdatedAt() != null) {
                 gen.writeStringField("updatedAt", shop.getUpdatedAt().toString());
             }
+
+            if (shop.getWorkingDays() != null & !shop.getWorkingDays().isEmpty()) {
+                gen.writeFieldName("workingDays");
+                gen.writeStartObject();
+                gen.writeObjectField("from", shop.getWorkingDays().get("from"));
+                gen.writeObjectField("to", shop.getWorkingDays().get("to"));
+                gen.writeEndObject();
+            }
+
+            if (shop.getWorkingHours() != null & !shop.getWorkingHours().isEmpty()) {
+                gen.writeFieldName("workingHours");
+                gen.writeStartObject();
+                gen.writeObjectField("from", shop.getWorkingHours().get("from"));
+                gen.writeObjectField("to", shop.getWorkingHours().get("to"));
+                gen.writeEndObject();
+            }
         }
 
         gen.writeEndObject();

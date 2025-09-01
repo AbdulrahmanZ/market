@@ -1,5 +1,7 @@
 package com.market.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.market.model.Shop;
 import com.market.model.Category;
 import com.market.model.Town;
@@ -32,6 +34,8 @@ public class ShopController {
     AuthenticationService authenticationService;
     @Autowired
     ShopRepository shopRepository;
+    @Autowired
+    ObjectMapper objectMapper;
 
     @PostMapping()
     @Transactional
@@ -50,7 +54,7 @@ public class ShopController {
         }
     }
 
-    private static Shop createShopFromRequest(ShopRequest shopRequest) {
+    private Shop createShopFromRequest(ShopRequest shopRequest) throws JsonProcessingException {
         Category category = new Category();
         category.setId(shopRequest.getCategoryId());
 
@@ -60,6 +64,8 @@ public class ShopController {
         User owner = new User();
         owner.setId(shopRequest.getOwnerId());
 
+        String workingHours = objectMapper.writeValueAsString(shopRequest.getWorkingHours());
+        String workingDays = objectMapper.writeValueAsString(shopRequest.getWorkingDays());
         Shop shop = new Shop(
                 shopRequest.getName(),
                 shopRequest.getDescription(),
@@ -69,7 +75,10 @@ public class ShopController {
                 shopRequest.getImageKey(), // Use imageKey from request
                 category,
                 town,
-                owner);
+                owner,
+                workingHours,
+                workingDays
+        );
 
         // Set isActive if provided, otherwise default to true
         if (shopRequest.getIsActive() != null) {
@@ -144,6 +153,16 @@ public class ShopController {
                 // Handle isActive field
                 if (shopRequest.getIsActive() != null) {
                     existingShop.setActive(shopRequest.getIsActive());
+                }
+
+                if (shopRequest.getWorkingDays() != null && !shopRequest.getWorkingDays().isEmpty()) {
+                    String workingDays = objectMapper.writeValueAsString(shopRequest.getWorkingDays());
+                    existingShop.setWorkingDays(workingDays);
+                }
+
+                if (shopRequest.getWorkingHours() != null && !shopRequest.getWorkingHours().isEmpty()) {
+                    String workingHours = objectMapper.writeValueAsString(shopRequest.getWorkingHours());
+                    existingShop.setWorkingHours(workingHours);
                 }
 
                 // Handle image key update with cleanup
