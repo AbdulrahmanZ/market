@@ -8,3 +8,14 @@
 
 ****************************
 Update password method
+****************************
+limit size for shop
+1- name
+2- description
+3- address
+4- phone (validation)
+5- working hours (validation)
+6- working days (validation)
+7- image size
+********************************
+Adding the public endpoint

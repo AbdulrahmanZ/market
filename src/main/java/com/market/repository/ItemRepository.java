@@ -13,6 +13,9 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
+    @Query(
+            "SELECT i FROM Item i WHERE i.shop.id = :shopId AND i.deleted = false"
+    )
     List<Item> findByShopId(Long shopId);
 
     List<Item> findByDescriptionContainingIgnoreCase(String name);

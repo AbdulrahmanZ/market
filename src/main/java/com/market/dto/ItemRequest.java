@@ -20,6 +20,8 @@ public class ItemRequest {
 
     private String imageKey;
 
+    private String currencyType;
+
 
     public String getDescription() {
         return description;
@@ -59,5 +61,13 @@ public class ItemRequest {
 
     public void setImageKey(String imageKey) {
         this.imageKey = imageKey;
+    }
+
+    public String getCurrencyType() {
+        return currencyType;
+    }
+
+    public void setCurrencyType(String currencyType) {
+        this.currencyType = currencyType;
     }
 }

@@ -17,6 +17,7 @@ public class ItemSerializer extends JsonSerializer<Item> {
         if (item != null) {
             // Always write basic fields
             gen.writeNumberField("id", item.getId());
+            gen.writeBooleanField("deleted", item.getDeleted());
 
             if (item.getName() != null) {
                 gen.writeStringField("name", item.getName());
@@ -30,6 +31,10 @@ public class ItemSerializer extends JsonSerializer<Item> {
 
             if (item.getImageKey() != null) {
                 gen.writeStringField("imageKey", item.getImageKey());
+            }
+
+            if (item.getCurrencyType() != null) {
+                gen.writeStringField("currencyType", item.getCurrencyType());
             }
 
             // Handle lazy-loaded Shop relationship

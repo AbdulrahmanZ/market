@@ -46,6 +46,7 @@ public class ItemController {
             item.setName(itemRequest.getName());
             item.setPrice(itemRequest.getPrice());
             item.setImageKey(itemRequest.getImageKey()); // Use imageKey from request
+            item.setCurrencyType(itemRequest.getCurrencyType());
 
             // Set shop relationship
             item.setShop(shop);
@@ -92,6 +93,7 @@ public class ItemController {
                 existingItem.setDescription(itemRequest.getDescription() != null ? existingItem.getDescription() : itemRequest.getDescription());
                 existingItem.setName(itemRequest.getName() != null ? existingItem.getName() : itemRequest.getName());
                 existingItem.setPrice(itemRequest.getPrice() == null ? existingItem.getPrice() : itemRequest.getPrice());
+                existingItem.setCurrencyType(itemRequest.getCurrencyType() != null ? existingItem.getCurrencyType() : itemRequest.getCurrencyType());
 
                 // Handle imageKey update (similar to ShopController)
                 if (itemRequest.getImageKey() != null && !itemRequest.getImageKey().equals(existingItem.getImageKey())) {

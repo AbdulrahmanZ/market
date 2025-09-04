@@ -12,14 +12,17 @@ import jakarta.persistence.*;
 @JsonSerialize(using = ItemSerializer.class)
 public class Item extends BaseEntity {
 
+    @Column(nullable = false)
+    private String name;
+
     @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false)
     private Double price;
 
-    // Added name field for the item entity
-    private String name;
+    @Column
+    private String currencyType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", nullable = false)
@@ -68,5 +71,13 @@ public class Item extends BaseEntity {
 
     public void setImageKey(String imageKey) {
         this.imageKey = imageKey;
+    }
+
+    public String getCurrencyType() {
+        return currencyType;
+    }
+
+    public void setCurrencyType(String currencyType) {
+        this.currencyType = currencyType;
     }
 }

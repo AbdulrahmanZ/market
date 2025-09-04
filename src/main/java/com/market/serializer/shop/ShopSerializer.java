@@ -19,6 +19,7 @@ public class ShopSerializer extends JsonSerializer<Shop> {
             gen.writeNumberField("id", shop.getId());
             gen.writeStringField("name", shop.getName());
             gen.writeStringField("itemCount", String.valueOf(shop.getItemCount()));
+            gen.writeBooleanField("deleted", shop.getDeleted());
 
             if (shop.getDescription() != null) {
                 gen.writeStringField("description", shop.getDescription());
