@@ -1,6 +1,5 @@
 package com.market.controller;
 
-import com.market.model.Item;
 import com.market.model.Shop;
 import com.market.service.FileStorageService;
 import com.market.service.ItemService;
