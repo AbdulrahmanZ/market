@@ -33,6 +33,8 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
 
     Page<Shop> findByCategoryId(Long categoryId, Pageable pageable);
 
+    Page<Shop> findByCategoryIdAndTownIdAndIsActiveTrue(Long categoryId, Long townId, Pageable pageable);
+
     boolean existsByNameAndOwnerId(String name, Long ownerId);
 
     long countByOwnerId(Long ownerId);

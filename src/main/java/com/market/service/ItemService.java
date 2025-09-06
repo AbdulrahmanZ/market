@@ -50,8 +50,8 @@ public class ItemService {
         return itemRepository.findByShopId(shopId);
     }
 
-    public Page<Item> getItemsByShop(Long shopId, Pageable pageable) {
-        return itemRepository.findByShopId(shopId, pageable);
+    public Page<Item> getAvailableItemsByShop(Long shopId, Pageable pageable) {
+        return itemRepository.findByShopIdAndDeletedFalse(shopId, pageable);
     }
 
     public List<Item> searchItemsByDescription(String description) {

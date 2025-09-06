@@ -23,7 +23,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByPriceBetween(Double minPrice, Double maxPrice);
 
     // Pageable versions
-    Page<Item> findByShopId(Long shopId, Pageable pageable);
+    Page<Item> findByShopIdAndDeletedFalse(Long shopId, Pageable pageable);
 
     Page<Item> findByDescriptionContainingIgnoreCase(String name, Pageable pageable);
 
@@ -31,7 +31,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     Page<Item> findByNameContainingIgnoreCase(String name, Pageable pageable);
 
-    @Query("SELECT i FROM Item i WHERE " +
+    @Query("SELECT i FROM Item i  " +
+            "Join Shop s ON s.id = i.shop.id WHERE s.isActive = true AND s.deleted = false AND i.deleted = false AND " +
             "(:name IS NULL OR LOWER(i.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
             "(:description IS NULL OR LOWER(i.description) LIKE LOWER(CONCAT('%', :description, '%'))) AND " +
             "(:categoryId IS NULL OR i.shop.category.id = :categoryId) AND " +

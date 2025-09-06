@@ -1,11 +1,10 @@
 package com.market.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.market.model.base.BaseEntity;
 import com.market.serializer.item.ItemSerializer;
-import com.market.serializer.shop.ShopSerializer;
+import com.market.serializer.shop.IdLabelShopSerializer;
 import jakarta.persistence.*;
 
 import java.util.Arrays;
@@ -31,7 +30,7 @@ public class Item extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", nullable = false)
-    @JsonSerialize(using = ShopSerializer.class)
+    @JsonSerialize(using = IdLabelShopSerializer.class)
     private Shop shop;
 
     private String imageKeys;

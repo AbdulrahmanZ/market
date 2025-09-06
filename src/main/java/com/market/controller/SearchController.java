@@ -53,6 +53,7 @@ public class SearchController {
     /**
      * SHOPS
      **/
+
     @GetMapping("/shop-by-owner/{ownerId}")
     public ResponseEntity<Page<Shop>> getShopsByOwner(
             @PathVariable Long ownerId,
@@ -60,6 +61,17 @@ public class SearchController {
         Page<Shop> shops = shopService.getShopsByOwner(ownerId, pageable);
         return ResponseEntity.ok(shops);
     }
+
+    @GetMapping("/active-shop-by-category-and-town/{townId}/{categoryId}")
+    public ResponseEntity<Page<Shop>> getActiveShopsByCategoryAndTown(
+            @PathVariable Long townId,
+            @PathVariable Long categoryId,
+            Pageable pageable) {
+        Page<Shop> shops = shopService.getActiveShopsByCategoryAndTown(townId, categoryId, pageable);
+        return ResponseEntity.ok(shops);
+    }
+
+    /*************************************************/
 
     @GetMapping("/shop-by-town/{townId}")
     public ResponseEntity<Page<Shop>> getShopsByTown(
@@ -81,20 +93,11 @@ public class SearchController {
      * ITEMS
      **/
 
-    @GetMapping("/items-by-description")
-    public ResponseEntity<Page<Item>> searchItems(
-            @RequestParam String description, Pageable pageable) {
-        Page<Item> items = itemService.searchItemsByDescription(description, pageable);
-        return ResponseEntity.ok(items);
-    }
-
-    @GetMapping("/items-by-price-range")
-    public ResponseEntity<Page<Item>> getItemsByPriceRange(
-            @RequestParam Double minPrice,
-            @RequestParam Double maxPrice,
+    @GetMapping("/items-by-shop/{shopId}")
+    public ResponseEntity<Page<Item>> getAvailableItemsByShop(
+            @PathVariable Long shopId,
             Pageable pageable) {
-
-        Page<Item> items = itemService.getItemsByPriceRange(minPrice, maxPrice, pageable);
+        Page<Item> items = itemService.getAvailableItemsByShop(shopId, pageable);
         return ResponseEntity.ok(items);
     }
 
@@ -109,6 +112,24 @@ public class SearchController {
             Pageable pageable
     ) {
         Page<Item> items = itemService.searchItemsAdvanced(name, description, minPrice, maxPrice, categoryId, townId, pageable);
+        return ResponseEntity.ok(items);
+    }
+
+
+    @GetMapping("/items-by-description")
+    public ResponseEntity<Page<Item>> searchItems(
+            @RequestParam String description, Pageable pageable) {
+        Page<Item> items = itemService.searchItemsByDescription(description, pageable);
+        return ResponseEntity.ok(items);
+    }
+
+    @GetMapping("/items-by-price-range")
+    public ResponseEntity<Page<Item>> getItemsByPriceRange(
+            @RequestParam Double minPrice,
+            @RequestParam Double maxPrice,
+            Pageable pageable) {
+
+        Page<Item> items = itemService.getItemsByPriceRange(minPrice, maxPrice, pageable);
         return ResponseEntity.ok(items);
     }
 }

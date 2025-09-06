@@ -159,4 +159,8 @@ public class ShopService {
     public long getShopCountByUser(Long userId) {
         return shopRepository.countByOwnerId(userId);
     }
+
+    public Page<Shop> getActiveShopsByCategoryAndTown(Long townId, Long categoryId, Pageable pageable) {
+        return shopRepository.findByCategoryIdAndTownIdAndIsActiveTrue(townId, categoryId, pageable);
+    }
 }
