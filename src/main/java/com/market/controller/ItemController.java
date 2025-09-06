@@ -45,7 +45,7 @@ public class ItemController {
             item.setDescription(itemRequest.getDescription());
             item.setName(itemRequest.getName());
             item.setPrice(itemRequest.getPrice());
-            item.setImageKey(itemRequest.getImageKey()); // Use imageKey from request
+            item.setImageKeys(itemRequest.getImageKeys()); // Use imageKey from request
             item.setCurrencyType(itemRequest.getCurrencyType());
 
             // Set shop relationship
@@ -96,8 +96,8 @@ public class ItemController {
                 existingItem.setCurrencyType(itemRequest.getCurrencyType() != null ? existingItem.getCurrencyType() : itemRequest.getCurrencyType());
 
                 // Handle imageKey update (similar to ShopController)
-                if (itemRequest.getImageKey() != null && !itemRequest.getImageKey().equals(existingItem.getImageKey())) {
-                    existingItem.setImageKey(itemRequest.getImageKey());
+                if (itemRequest.getImageKeys() != null && !itemRequest.getImageKeys().equals(existingItem.getImageKeys())) {
+                    existingItem.setImageKeys(itemRequest.getImageKeys());
                 }
 
                 // Note: We don't allow changing the shop ID for existing items for data integrity

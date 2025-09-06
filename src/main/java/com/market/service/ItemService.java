@@ -78,12 +78,12 @@ public class ItemService {
         item.setPrice(itemDetails.getPrice());
 
         // Handle imageKey update with cleanup (similar to ShopService)
-        if (itemDetails.getImageKey() != null && !itemDetails.getImageKey().equals(item.getImageKey())) {
+        if (itemDetails.getImageKeys() != null && !itemDetails.getImageKeys().equals(item.getImageKeys())) {
             // Delete old image if exists and different from new one
-            if (item.getImageKey() != null && !item.getImageKey().isEmpty()) {
-                fileStorageService.deleteFile(item.getImageKey());
+            if (item.getImageKeys() != null && !item.getImageKeys().isEmpty()) {
+                fileStorageService.deleteFile(item.getImageKeys());
             }
-            item.setImageKey(itemDetails.getImageKey());
+            item.setImageKeys(itemDetails.getImageKeys());
         }
 
         return itemRepository.save(item);

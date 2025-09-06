@@ -29,8 +29,8 @@ public class ItemSerializer extends JsonSerializer<Item> {
                 gen.writeNumberField("price", item.getPrice());
             }
 
-            if (item.getImageKey() != null) {
-                gen.writeStringField("imageKey", item.getImageKey());
+            if (item.getImageKeys() != null) {
+                gen.writeObjectField("imageKeys", item.getImageKeysAsMap());
             }
 
             if (item.getCurrencyType() != null) {

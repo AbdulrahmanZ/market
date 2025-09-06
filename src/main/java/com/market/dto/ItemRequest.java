@@ -18,7 +18,7 @@ public class ItemRequest {
     @NotNull(message = "Shop ID is required")
     private Long shopId;
 
-    private String imageKey;
+    private String imageKeys;
 
     private String currencyType;
 
@@ -55,12 +55,12 @@ public class ItemRequest {
         this.shopId = shopId;
     }
 
-    public String getImageKey() {
-        return imageKey;
+    public String getImageKeys() {
+        return imageKeys;
     }
 
-    public void setImageKey(String imageKey) {
-        this.imageKey = imageKey;
+    public void setImageKeys(String imageKeys) {
+        this.imageKeys = imageKeys;
     }
 
     public String getCurrencyType() {

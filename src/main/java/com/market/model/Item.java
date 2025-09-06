@@ -1,11 +1,16 @@
 package com.market.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.market.model.base.BaseEntity;
 import com.market.serializer.item.ItemSerializer;
 import com.market.serializer.shop.ShopSerializer;
 import jakarta.persistence.*;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "_items")
@@ -29,8 +34,7 @@ public class Item extends BaseEntity {
     @JsonSerialize(using = ShopSerializer.class)
     private Shop shop;
 
-    // New imageKey field for cleaner image handling (similar to Shop)
-    private String imageKey;
+    private String imageKeys;
 
     // Getters and Setters
     public String getDescription() {
@@ -65,12 +69,24 @@ public class Item extends BaseEntity {
         this.shop = shop;
     }
 
-    public String getImageKey() {
-        return imageKey;
+    @JsonIgnore
+    public String getImageKeys() {
+        return imageKeys;
     }
 
-    public void setImageKey(String imageKey) {
-        this.imageKey = imageKey;
+    public List<String> getImageKeysAsMap() {
+        if (this.imageKeys == null || this.imageKeys.trim().isEmpty()) {
+            return List.of(); // Return an empty, immutable list for consistency
+        }
+        // Todo make it dynamic fetch
+        return Arrays.stream(this.imageKeys.split(","))
+                .map(String::trim)
+                .limit(3)
+                .collect(Collectors.toList());
+    }
+
+    public void setImageKeys(String imageKeys) {
+        this.imageKeys = imageKeys;
     }
 
     public String getCurrencyType() {
