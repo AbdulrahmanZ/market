@@ -76,15 +76,6 @@ public class FileStorageService {
         }
     }
 
-    public boolean fileExists(String relativePath) {
-        Path filePath = Paths.get(uploadDir, relativePath);
-        return Files.exists(filePath);
-    }
-
-    public Path getFilePath(String relativePath) {
-        return Paths.get(uploadDir, relativePath);
-    }
-
     private void validateImageFile(MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw new IOException("File is empty");
@@ -153,111 +144,5 @@ public class FileStorageService {
             return "";
         }
         return filename.substring(filename.lastIndexOf('.'));
-    }
-
-    public com.market.model.MediaType determineMediaType(MultipartFile file) {
-        String contentType = file.getContentType();
-        if (contentType != null) {
-            if (contentType.startsWith("image/")) {
-                return com.market.model.MediaType.IMAGE;
-            } else if (contentType.startsWith("video/")) {
-                return com.market.model.MediaType.VIDEO;
-            }
-        }
-        return com.market.model.MediaType.IMAGE; // Default to image
-    }
-
-    // ==================== STREAMING SUPPORT METHODS ====================
-
-    /**
-     * Get file size for streaming support
-     */
-    public long getFileSize(String relativePath) throws IOException {
-        Path filePath = Paths.get(uploadDir, relativePath);
-        if (!Files.exists(filePath)) {
-            throw new IOException("File not found: " + relativePath);
-        }
-        return Files.size(filePath);
-    }
-
-    /**
-     * Get file resource for streaming
-     */
-    public Resource getFileResource(String relativePath) throws IOException {
-        Path filePath = Paths.get(uploadDir, relativePath);
-        Resource resource = new UrlResource(filePath.toUri());
-
-        if (!resource.exists() || !resource.isReadable()) {
-            throw new IOException("File not found or not readable: " + relativePath);
-        }
-
-        return resource;
-    }
-
-    /**
-     * Read file chunk for range requests (streaming)
-     */
-    public byte[] readFileChunk(String relativePath, long start, long end) throws IOException {
-        Path filePath = Paths.get(uploadDir, relativePath);
-
-        if (!Files.exists(filePath)) {
-            throw new IOException("File not found: " + relativePath);
-        }
-
-        try (RandomAccessFile file = new RandomAccessFile(filePath.toFile(), "r")) {
-            long fileSize = file.length();
-
-            // Validate range
-            if (start < 0 || start >= fileSize) {
-                throw new IOException("Invalid start position: " + start);
-            }
-
-            if (end < 0 || end >= fileSize) {
-                end = fileSize - 1;
-            }
-
-            if (start > end) {
-                throw new IOException("Invalid range: start > end");
-            }
-
-            int chunkSize = (int) (end - start + 1);
-            byte[] buffer = new byte[chunkSize];
-
-            file.seek(start);
-            int bytesRead = file.read(buffer);
-
-            if (bytesRead != chunkSize) {
-                // Adjust buffer size if we read less than expected
-                byte[] actualBuffer = new byte[bytesRead];
-                System.arraycopy(buffer, 0, actualBuffer, 0, bytesRead);
-                return actualBuffer;
-            }
-
-            return buffer;
-        }
-    }
-
-    /**
-     * Check if file supports streaming (mainly for videos)
-     */
-    public boolean supportsStreaming(String relativePath) {
-        String extension = getFileExtension(relativePath).toLowerCase();
-        // Video files that support streaming
-        return extension.matches("\\.(mp4|webm|mov|avi|mkv)");
-    }
-
-    /**
-     * Get optimal chunk size for streaming based on file type
-     */
-    public int getOptimalChunkSize(String relativePath) {
-        String extension = getFileExtension(relativePath).toLowerCase();
-
-        if (extension.matches("\\.(mp4|webm|mov)")) {
-            return 1024 * 1024; // 1MB for modern video formats
-        } else if (extension.matches("\\.(avi|mkv|wmv)")) {
-            return 512 * 1024; // 512KB for older formats
-        } else {
-            return 64 * 1024; // 64KB for images and other files
-        }
     }
 }
