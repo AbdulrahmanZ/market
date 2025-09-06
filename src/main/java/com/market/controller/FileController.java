@@ -52,7 +52,7 @@ public class FileController {
         }
     }
 
-    @PostMapping("/upload/item-media")
+    @PostMapping("/upload/item-image")
     public ResponseEntity<Map<String, String>> uploadItemMedia(
             @RequestParam("file") MultipartFile file,
             @RequestParam("shopId") Long shopId,
