@@ -23,7 +23,8 @@ public class PublicController {
         parameterRepository.findByCodeIn(Arrays.asList(Setup.Parameter.BASE_URL,
                         Setup.Parameter.IMAGE_BASE_URL,
                         Setup.Parameter.CHECK_AFTER,
-                        Setup.Parameter.NOTIFICATION_ALARM))
+                        Setup.Parameter.NOTIFICATION_ALARM,
+                        Setup.Parameter.ITEM_IMAGE_NUMBER))
                 .stream()
                 .filter(Objects::nonNull)
                 .filter(p -> StringUtils.hasText(p.getValue()))
