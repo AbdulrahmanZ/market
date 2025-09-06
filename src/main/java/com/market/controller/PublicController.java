@@ -24,7 +24,8 @@ public class PublicController {
                         Setup.Parameter.IMAGE_BASE_URL,
                         Setup.Parameter.CHECK_AFTER,
                         Setup.Parameter.NOTIFICATION_ALARM,
-                        Setup.Parameter.ITEM_IMAGE_NUMBER))
+                        Setup.Parameter.ITEM_IMAGE_NUMBER,
+                        Setup.Parameter.WHATSAPP_ICON_DISPLAY))
                 .stream()
                 .filter(Objects::nonNull)
                 .filter(p -> StringUtils.hasText(p.getValue()))
