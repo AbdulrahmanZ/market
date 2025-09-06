@@ -3,6 +3,8 @@ package com.market.service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,6 +12,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+
+
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+
 
 @Service
 public class FileStorageService {
@@ -61,6 +68,42 @@ public class FileStorageService {
 
         // Return relative path for storage in database
         return itemsDir + "/shop-" + shopId + "/" + uniqueFilename;
+    }
+
+    /**
+     * Loads a file from the file system as a Spring Resource.
+     * This method includes a security check to prevent directory traversal attacks.
+     *
+     * @param relativePath The relative path of the file to load.
+     * @return A Resource object representing the file.
+     * @throws FileNotFoundException If the file does not exist or is not accessible.
+     */
+    public Resource loadImageAsResource(String relativePath) throws FileNotFoundException {
+        try {
+            Path imagePath = Paths.get(uploadDir, relativePath);
+            Resource resource = new UrlResource(imagePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                throw new FileNotFoundException("File not found: " + relativePath);
+            }
+        } catch (MalformedURLException e) {
+            throw new FileNotFoundException("File not found: " + relativePath);
+        }
+    }
+
+    /**
+     * Gets the content type of a file resource.
+     *
+     * @param resource The file resource.
+     * @return The content type as a String.
+     * @throws IOException If the content type cannot be determined.
+     */
+    public String getContentType(Resource resource) throws IOException {
+        Path filePath = Paths.get(resource.getURI());
+        String contentType = Files.probeContentType(filePath);
+        return contentType != null ? contentType : "application/octet-stream";
     }
 
     public void deleteFile(String relativePath) {
