@@ -1,12 +1,17 @@
 package com.market.controller;
 
 import com.market.model.*;
+import com.market.projection.ItemProjection;
 import com.market.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/search")
@@ -94,15 +99,15 @@ public class SearchController {
      **/
 
     @GetMapping("/items-by-shop/{shopId}")
-    public ResponseEntity<Page<Item>> getAvailableItemsByShop(
+    public ResponseEntity<?> getAvailableItemsByShop(
             @PathVariable Long shopId,
             Pageable pageable) {
-        Page<Item> items = itemService.getAvailableItemsByShop(shopId, pageable);
+        Page<ItemProjection> items = itemService.getAvailableItemsByShop(shopId, pageable);
         return ResponseEntity.ok(items);
     }
 
     @GetMapping("/items-advanced")
-    public ResponseEntity<Page<Item>> searchItemsAdvanced(
+    public ResponseEntity<?> searchItemsAdvanced(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String description,
             @RequestParam(required = false) Double minPrice,
@@ -111,10 +116,21 @@ public class SearchController {
             @RequestParam(required = false) Long townId,
             Pageable pageable
     ) {
-        Page<Item> items = itemService.searchItemsAdvanced(name, description, minPrice, maxPrice, categoryId, townId, pageable);
+        Page<ItemProjection> items = itemService.searchItemsAdvanced(name, description, minPrice, maxPrice, categoryId, townId, pageable);
         return ResponseEntity.ok(items);
     }
 
+    @GetMapping("/items-by-ids-list")
+    public ResponseEntity<?> getItemsByIdsList(@RequestParam String list) {
+        if (list.isEmpty()) {
+            return ResponseEntity.ok(List.of());
+        }
+        System.out.println(list);
+        List<ItemProjection> items = itemService.getItemsByIdsList(
+                Arrays.stream(list.split(",")).map(String::trim).collect(Collectors.toList())
+        );
+        return ResponseEntity.ok(items);
+    }
 
     @GetMapping("/items-by-description")
     public ResponseEntity<Page<Item>> searchItems(

@@ -1,6 +1,7 @@
 package com.market.repository;
 
 import com.market.model.Item;
+import com.market.projection.ItemProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,7 +24,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByPriceBetween(Double minPrice, Double maxPrice);
 
     // Pageable versions
-    Page<Item> findByShopIdAndDeletedFalse(Long shopId, Pageable pageable);
+    Page<ItemProjection> findByShopIdAndDeletedFalse(Long shopId, Pageable pageable);
 
     Page<Item> findByDescriptionContainingIgnoreCase(String name, Pageable pageable);
 
@@ -39,7 +40,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "(:townId IS NULL OR i.shop.town.id = :townId) AND " +
             "(:minPrice IS NULL OR i.price >= :minPrice) AND " +
             "(:maxPrice IS NULL OR i.price <= :maxPrice)")
-    Page<Item> searchItemsAdvanced(
+    Page<ItemProjection> searchItemsAdvanced(
             @Param("name") String name,
             @Param("description") String description,
             @Param("minPrice") Double minPrice,
@@ -48,6 +49,8 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             @Param("townId") Long townId,
             Pageable pageable
     );
+
+    List<ItemProjection> findByIdIn(List<String> list);
 
     @Modifying
     @Query("update Item i SET i.deleted = true WHERE i.id = :id")

@@ -73,7 +73,7 @@ public class Item extends BaseEntity {
         return imageKeys;
     }
 
-    public List<String> getImageKeysAsMap() {
+    public List<String> getImageKeysAsList() {
         if (this.imageKeys == null || this.imageKeys.trim().isEmpty()) {
             return List.of(); // Return an empty, immutable list for consistency
         }

@@ -30,7 +30,7 @@ public class ItemSerializer extends JsonSerializer<Item> {
             }
 
             if (item.getImageKeys() != null) {
-                gen.writeObjectField("imageKeys", item.getImageKeysAsMap());
+                gen.writeObjectField("imageKeys", item.getImageKeysAsList());
             }
 
             if (item.getCurrencyType() != null) {

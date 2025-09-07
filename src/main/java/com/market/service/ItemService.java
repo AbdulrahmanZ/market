@@ -1,8 +1,8 @@
 package com.market.service;
 
 import com.market.model.Item;
-import com.market.model.MediaType;
 import com.market.model.Shop;
+import com.market.projection.ItemProjection;
 import com.market.repository.ItemRepository;
 import com.market.exception.ItemLimitExceededException;
 import org.springframework.data.domain.Page;
@@ -50,7 +50,7 @@ public class ItemService {
         return itemRepository.findByShopId(shopId);
     }
 
-    public Page<Item> getAvailableItemsByShop(Long shopId, Pageable pageable) {
+    public Page<ItemProjection> getAvailableItemsByShop(Long shopId, Pageable pageable) {
         return itemRepository.findByShopIdAndDeletedFalse(shopId, pageable);
     }
 
@@ -147,7 +147,7 @@ public class ItemService {
         return getRemainingItemSlots(shopId) > 0;
     }
 
-    public Page<Item> searchItemsAdvanced(
+    public Page<ItemProjection> searchItemsAdvanced(
             String name,
             String description,
             Double minPrice,
@@ -157,5 +157,9 @@ public class ItemService {
             Pageable pageable
     ) {
         return itemRepository.searchItemsAdvanced(name, description, minPrice, maxPrice, categoryId, townId, pageable);
+    }
+
+    public List<ItemProjection> getItemsByIdsList(List<String> list) {
+        return itemRepository.findByIdIn(list);
     }
 }
